@@ -167,6 +167,17 @@ wtpProb <- function(res, wtp) {
   return(wtp_p)
 }
 
+
+# wtpPlot <- function(res) {
+#   df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA)
+#   for (i in 1:dim(df)[1]) {
+#
+#   }
+#
+#
+#        )
+# }
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   theme = shinytheme("united"),
