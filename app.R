@@ -11,6 +11,7 @@ library(shiny)
 library(shinythemes)
 library(ggplot2)
 library(ggthemes)
+library(tibble)
 
 asthmaICER <- function (p.GA=0.25,
                         p.exa.Notr.notGA=0,
@@ -102,15 +103,33 @@ asthmaICER <- function (p.GA=0.25,
     q.all<-qloss_exca*p.exa.withtr.GA*0.25+qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*p.exa.withtr.notGA*0.75+qloss_notexca*(1-p.exa.withtr.notGA)*0.75
 
     res[k,]=c(k,C.notreatment,C.OnlyGAs,C.all,q.notreatment,q.OnlyGAs,q.all)
-    LE <- c(q.notreatment,q.OnlyGAs, q.all)
-    C  <- c(C.notreatment, C.OnlyGAs, C.all)
+    LE <- round(c(q.notreatment,q.OnlyGAs, q.all), 5)
+    seqLE <-c("Ref.",
+                     round(q.OnlyGAs-q.notreatment, 5),
+                     round(q.all-q.notreatment, 5))
+
+    C  <- round(c(C.notreatment, C.OnlyGAs, C.all),2)
     names(LE) <- names(C) <- c("notreatment", "OnlyGAs", "q.all")
 
-    return(LE)
+    seqC <- c("Ref.",
+                     round(C.OnlyGAs-C.notreatment, 2),
+                     round(C.all-C.notreatment, 2))
+
+    seqICER <- c("Ref.",
+                 round((C.OnlyGAs-C.notreatment)/(-q.OnlyGAs+q.notreatment),0),
+                 round((C.all-C.notreatment)/(-q.all+q.notreatment),0))
+
+    icer <- tibble (Strategy=c("No Intervention", "Prevention only for GA", "Prevention for all"),
+                     Costs = C,
+                    `QALY Loss` = LE,
+                    `Sequential incremental costs` = seqC,
+                    `Sequential incremental QALY loss` = seqLE,
+                    `Sequential ICER` = seqICER
+                    )
+
+
+    return(icer)
   }
-
-
-
 
 }
 
@@ -160,12 +179,12 @@ ui <- fluidPage(
 server <- function(input, output) {
 
 
-    output$LE<- renderText({
+    output$LE<- renderTable({
        asthmaICER(p.GA               = input$p.GA,
                   p.exa.Notr.notGA   = input$p.exa.Notr.notGA,
                   p.exa.withtr.notGA = input$p.exa.withtr.notGA,
                   wtp                = input$wtp)
-    })
+    }, digits = 5)
 }
 
 # Run the application
