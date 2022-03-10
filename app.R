@@ -9,6 +9,7 @@
 
 library(shiny)
 library(tibble)
+library(markdown)
 library(dplyr)
 
 asthmaICER <- function (p.GA=0.25,
@@ -255,8 +256,8 @@ ui <- fluidPage(
                                tableOutput("ICER"),
                                textOutput("wtpProb")
                       ),
-                      tabPanel("Terms",  includeMarkdown("./disclaimer.rmd")),
-                      tabPanel("About",  includeMarkdown("./about.rmd"))#,
+                      tabPanel("Terms",  includeMarkdown("./disclaimer.Rmd")),
+                      tabPanel("About",  includeMarkdown("./about.Rmd"))#,
                                #imageOutput("logos")
 
           )
