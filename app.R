@@ -9,8 +9,6 @@
 
 library(shiny)
 library(shinythemes)
-library(ggplot2)
-library(ggthemes)
 library(tibble)
 
 asthmaICER <- function (p.GA=0.25,
@@ -106,18 +104,19 @@ asthmaICER <- function (p.GA=0.25,
     LE <- round(c(q.notreatment,q.OnlyGAs, q.all), 5)
     seqLE <-c("Ref.",
                      round(q.OnlyGAs-q.notreatment, 5),
-                     round(q.all-q.notreatment, 5))
+                     round(q.all-q.OnlyGAs, 5))
+
 
     C  <- round(c(C.notreatment, C.OnlyGAs, C.all),2)
     names(LE) <- names(C) <- c("notreatment", "OnlyGAs", "q.all")
 
     seqC <- c("Ref.",
                      round(C.OnlyGAs-C.notreatment, 2),
-                     round(C.all-C.notreatment, 2))
+                     round(C.all-C.OnlyGAs, 2))
 
     seqICER <- c("Ref.",
                  round((C.OnlyGAs-C.notreatment)/(-q.OnlyGAs+q.notreatment),0),
-                 round((C.all-C.notreatment)/(-q.all+q.notreatment),0))
+                 round((C.all-C.OnlyGAs)/(-q.all+q.OnlyGAs),0))
 
     icer <- tibble (Strategy=c("No Intervention", "Prevention only for GA", "Prevention for all"),
                      Costs = C,
@@ -136,7 +135,7 @@ asthmaICER <- function (p.GA=0.25,
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-  #theme = shinytheme("united"),
+  theme = shinytheme("united"),
     # Application title
     titlePanel("The economics of precision health: preventing air pollution-induced exacerbation in asthma"),
 
@@ -147,25 +146,29 @@ ui <- fluidPage(
                        "Probability of Genetic Abnormality",
                        min = 0,
                        max = 1,
-                       value = 0.25),
+                       value = 0.25,
+                       step = 0.01),
 
           numericInput("p.exa.Notr.notGA",
                        "Probability of Exacerbations without Tx -  No Genetic Abnormality",
                        min = 0,
                        max = 1,
-                       value = 0),
+                       value = 0,
+                       step = 0.01),
 
           numericInput("p.exa.withtr.notGA",
                        "Probability of Exacerbations with Tx - No Genetic Abnormality",
                        min = 0,
                        max = 1,
-                       value = 0),
+                       value = 0,
+                       step = 0.01),
 
           numericInput("wtp",
                        "Willingness to Pay",
                        min = 0,
                        max = 500000,
-                       value = 50000)
+                       value = 50000,
+                       step = 10000)
         ),
 
         # Show a plot of the generated distribution
