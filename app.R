@@ -8,13 +8,17 @@
 #
 
 library(shiny)
-library(shinythemes)
 library(tibble)
 library(dplyr)
 
 asthmaICER <- function (p.GA=0.25,
                         p.exa.Notr.notGA=0,
                         p.exa.withtr.notGA=0,
+                        p.exa.Notr.GA.mean =0.55,
+                        p.exa.withtr.GA.mean = 0.05,
+                        Cost_treatemnt=2.49*2*30,
+                        cost_exacmean=0.4*575+0.6*126,
+                        Cost_genetic_id=199*(3796/7212)*(125.9/120.5),
                         wtp=50000
 ) {
 
@@ -37,19 +41,15 @@ asthmaICER <- function (p.GA=0.25,
     list ( a=a , b=b )
   }
 
-  p.exa.Notr.GA.mean <- 0.55
-  p.exa.Notr.GA.SD<-0.55*(0.2/1.96)
 
-  p.exa.withtr.GA.mean <- 0.05
-  p.exa.withtr.GA.SD<-0.05*(0.2/1.96)
+  p.exa.Notr.GA.SD<-p.exa.Notr.GA.mean*(0.2/1.96)
+
+  p.exa.withtr.GA.SD<- p.exa.withtr.GA.mean*(0.2/1.96)
 
   #############
-  Cost_treatemnt <-2.49*2*30
 
-  cost_exacmean<-0.4*575+0.6*126
   cost_exacSD=(0.2/1.96)* cost_exacmean
 
-  Cost_genetic_id<-199*(3796/7212)*(125.9/120.5)
 
 
   set.seed(135)
@@ -180,19 +180,19 @@ wtpProb <- function(res, wtp) {
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-  theme = shinytheme("united"),
+#  theme = shinytheme("united"),
     # Application title
     titlePanel("The economics of precision health: preventing air pollution-induced exacerbation in asthma"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-          numericInput("p.GA",
-                       "Probability of Genetic Abnormality",
-                       min = 0,
-                       max = 1,
-                       value = 0.25,
-                       step = 0.01),
+          # numericInput("p.GA",
+          #              "Probability of Genetic Abnormality",
+          #              min = 0,
+          #              max = 1,
+          #              value = 0.25,
+          #              step = 0.01),
 
           numericInput("p.exa.Notr.notGA",
                        "Probability of Exacerbations without Tx -  No Genetic Abnormality",
@@ -207,6 +207,38 @@ ui <- fluidPage(
                        max = 1,
                        value = 0,
                        step = 0.01),
+          numericInput ("p.exa.Notr.GA.mean",
+                        "Probability of Exacerbation without Tx - Genetic Abnormality",
+                        min = 0,
+                        max = 1,
+                        value = 0.55,
+                        step = 0.01),
+          numericInput ("p.exa.withtr.GA.mean",
+                        "Probability of Exacerbation without Tx - Genetic Abnormality",
+                        min = 0,
+                        max = 1,
+                        value = 0.05,
+                        step = 0.01),
+          numericInput ("Cost_treatemnt",
+                        "Cost of Treatment",
+                        min = 0,
+                        max = 1000,
+                        value = 149.4,
+                        step = 10
+                          ),
+          numericInput ("cost_exacmean",
+                        "Mean Exacerbation Cost",
+                        min = 0,
+                        max = 1000,
+                        value = 305.6,
+                        step = 10
+                        ),
+          numericInput ("Cost_genetic_id",
+                        "Cost for Genetic Test",
+                        min = 0,
+                        max = 1000,
+                        value = 109.44,
+                        step = 10),
 
           numericInput("wtp",
                        "Willingness to Pay",
@@ -240,10 +272,15 @@ server <- function(input, output) {
 
     output$ICER <- renderTable({
       sequentialICER(
-       asthmaICER(p.GA               = input$p.GA,
-                  p.exa.Notr.notGA   = input$p.exa.Notr.notGA,
-                  p.exa.withtr.notGA = input$p.exa.withtr.notGA,
-                  wtp                = input$wtp))
+       asthmaICER(p.GA                 = input$p.GA,
+                  p.exa.Notr.notGA     = input$p.exa.Notr.notGA,
+                  p.exa.withtr.notGA   = input$p.exa.withtr.notGA,
+                  wtp                  = input$wtp,
+                  p.exa.Notr.GA.mean   = input$p.exa.Notr.GA.mean   ,
+                  p.exa.withtr.GA.mean = input$p.exa.withtr.GA.mean ,
+                  Cost_treatemnt       = input$Cost_treatemnt       ,
+                  cost_exacmean        = input$cost_exacmean        ,
+                  Cost_genetic_id      = input$Cost_genetic_id       ))
     }, digits = 5)
 
     output$wtpProb <- renderText({
@@ -251,10 +288,15 @@ server <- function(input, output) {
       paste0("At a willingess to pay of $",
       input$wtp,
       " the probability of the targeted intervention being cost-effective is ",
-      100*wtpProb(asthmaICER(p.GA               = input$p.GA,
-                          p.exa.Notr.notGA   = input$p.exa.Notr.notGA,
-                          p.exa.withtr.notGA = input$p.exa.withtr.notGA,
-                          wtp                = input$wtp),
+      100*wtpProb(asthmaICER(p.GA                 = input$p.GA,
+                             p.exa.Notr.notGA     = input$p.exa.Notr.notGA,
+                             p.exa.withtr.notGA   = input$p.exa.withtr.notGA,
+                             wtp                  = input$wtp,
+                             p.exa.Notr.GA.mean   = input$p.exa.Notr.GA.mean   ,
+                             p.exa.withtr.GA.mean = input$p.exa.withtr.GA.mean ,
+                             Cost_treatemnt       = input$Cost_treatemnt       ,
+                             cost_exacmean        = input$cost_exacmean        ,
+                             Cost_genetic_id      = input$Cost_genetic_id       ),
               wtp=input$wtp), "%")
 
     })
