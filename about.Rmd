@@ -1,0 +1,27 @@
+---
+title: "about"
+output: html_document
+---
+
+#### About 
+
+This web application uses a decision-tree health economics models to conduct a cost-utility analysis of prevention interventions in case
+of acute exposure to air pollution in mild asthma. 
+
+Please refer to the manuscript for more details on the structure of the model and results.
+
+
+#### Citation
+
+Mohammadi T, Sadatsafavi M, Carlsten C. The economics of precision health: preventing air pollution-induced exacerbation in asthma. ERJ open research. 2021 Jan 1;7(1). doi:[10.1183/23120541.00790-2020](https://doi.org/10.1183/23120541.00790-2020)
+
+
+#### Bug Report
+
+Please report bugs and issues [here] (https://github.com/aminadibi/asthmaPollutionExacShiny/issues).
+
+                         
+<!-- #### Credits -->
+
+<!-- ACCEPT is created by [Amin Adibi](http://resp.core.ubc.ca/team/Amin_Adibi),  [Tima Mohammadi](http://resp.core.ubc.ca/team/Abdollah_Safari), [Mohsen Sadatsafavi](http://resp.core.ubc.ca/team/Mohsen_Sadatsafavi), and [Chris Carlsten]() at the University of British Columbia.  -->
+

@@ -10,6 +10,7 @@
 library(shiny)
 library(shinythemes)
 library(tibble)
+library(dplyr)
 
 asthmaICER <- function (p.GA=0.25,
                         p.exa.Notr.notGA=0,
@@ -101,37 +102,70 @@ asthmaICER <- function (p.GA=0.25,
     q.all<-qloss_exca*p.exa.withtr.GA*0.25+qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*p.exa.withtr.notGA*0.75+qloss_notexca*(1-p.exa.withtr.notGA)*0.75
 
     res[k,]=c(k,C.notreatment,C.OnlyGAs,C.all,q.notreatment,q.OnlyGAs,q.all)
-    LE <- round(c(q.notreatment,q.OnlyGAs, q.all), 5)
-    seqLE <-c("Ref.",
-                     round(q.OnlyGAs-q.notreatment, 5),
-                     round(q.all-q.OnlyGAs, 5))
-
-
-    C  <- round(c(C.notreatment, C.OnlyGAs, C.all),2)
-    names(LE) <- names(C) <- c("notreatment", "OnlyGAs", "q.all")
-
-    seqC <- c("Ref.",
-                     round(C.OnlyGAs-C.notreatment, 2),
-                     round(C.all-C.OnlyGAs, 2))
-
-    seqICER <- c("Ref.",
-                 round((C.OnlyGAs-C.notreatment)/(-q.OnlyGAs+q.notreatment),0),
-                 round((C.all-C.OnlyGAs)/(-q.all+q.OnlyGAs),0))
-
-    icer <- tibble (Strategy=c("No Intervention", "Prevention only for GA", "Prevention for all"),
-                     Costs = C,
-                    `QALY Loss` = LE,
-                    `Sequential incremental costs` = seqC,
-                    `Sequential incremental QALY loss` = seqLE,
-                    `Sequential ICER` = seqICER
-                    )
-
-
-    return(icer)
   }
+
+
+    return(res)
+
 
 }
 
+
+
+sequentialICER <- function(res) {
+  res2 <- as_tibble(res) %>% summarise_all(mean, na.rm=TRUE)
+  q.notreatment <- res2$Q_notreatment
+  q.OnlyGAs     <- res2$Q_onlyGAs
+  q.all         <- res2$Q_all
+
+  C.notreatment <- res2$notreatment_cost
+  C.OnlyGAs     <- res2$`only GA_cost`
+  C.all         <- res2$All_cost
+
+
+  LE <- round(c(q.notreatment,q.OnlyGAs, q.all), 5)
+  seqLE <-c("Ref.",
+            round(q.OnlyGAs-q.notreatment, 5),
+            round(q.all-q.OnlyGAs, 5))
+
+
+  C  <- round(c(C.notreatment, C.OnlyGAs, C.all),2)
+  names(LE) <- names(C) <- c("notreatment", "OnlyGAs", "q.all")
+
+  seqC <- c("Ref.",
+            round(C.OnlyGAs-C.notreatment, 2),
+            round(C.all-C.OnlyGAs, 2))
+
+  seqICER <- c("Ref.",
+               round((C.OnlyGAs-C.notreatment)/(-q.OnlyGAs+q.notreatment),0),
+               round((C.all-C.OnlyGAs)/(-q.all+q.OnlyGAs),0))
+
+  icer <- tibble (Strategy=c("No Intervention", "Prevention only for GA", "Prevention for all"),
+                  Costs = C,
+                  `QALY Loss` = LE,
+                  `Sequential incremental costs` = seqC,
+                  `Sequential incremental QALY loss` = seqLE,
+                  `Sequential ICER` = seqICER
+  )
+
+  return(icer)
+
+
+
+}
+
+wtpProb <- function(res, wtp) {
+  # plotting
+  res_ICER_prob <- as_tibble(res)
+  res_ICER_prob <- res_ICER_prob %>%
+    mutate(ICER_OnlyGAs = (`only GA_cost`-notreatment_cost)/(-Q_onlyGAs + Q_notreatment)) %>%
+    mutate(wtp_met = ICER_OnlyGAs<=wtp) %>%
+    summarise_all(mean, na.rm=TRUE)
+
+  wtp_p <- res_ICER_prob$wtp_met
+
+  return(wtp_p)
+}
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -173,7 +207,18 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-          tableOutput("LE")
+          tabsetPanel(type="tabs",
+                      tabPanel("ICER",
+                               tableOutput("ICER"),
+                               textOutput("wtpProb")
+                      ),
+                      tabPanel("Terms",  includeMarkdown("./disclaimer.rmd")),
+                      tabPanel("About",  includeMarkdown("./about.rmd"))#,
+                               #imageOutput("logos")
+
+          )
+
+
         )
     )
 )
@@ -182,13 +227,29 @@ ui <- fluidPage(
 server <- function(input, output) {
 
 
-    output$LE<- renderTable({
+    output$ICER <- renderTable({
+      sequentialICER(
        asthmaICER(p.GA               = input$p.GA,
                   p.exa.Notr.notGA   = input$p.exa.Notr.notGA,
                   p.exa.withtr.notGA = input$p.exa.withtr.notGA,
-                  wtp                = input$wtp)
+                  wtp                = input$wtp))
     }, digits = 5)
+
+    output$wtpProb <- renderText({
+
+      paste0("At a willingess to pay of $",
+      input$wtp,
+      " the probability of the targeted intervention being cost-effective is ",
+      100*wtpProb(asthmaICER(p.GA               = input$p.GA,
+                          p.exa.Notr.notGA   = input$p.exa.Notr.notGA,
+                          p.exa.withtr.notGA = input$p.exa.withtr.notGA,
+                          wtp                = input$wtp),
+              wtp=input$wtp), "%")
+
+    })
 }
+
+
 
 # Run the application
 shinyApp(ui = ui, server = server)
