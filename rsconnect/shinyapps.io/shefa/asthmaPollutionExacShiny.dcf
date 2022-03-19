@@ -5,9 +5,9 @@ account: shefa
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5828445
-bundleId: 5668864
+bundleId: 5668873
 url: https://shefa.shinyapps.io/asthmaPollutionExacShiny/
-when: 1646955392.36501
-lastSyncTime: 1646955392.36503
+when: 1646955487.15021
+lastSyncTime: 1646955487.15023
 asMultiple: FALSE
 asStatic: FALSE
