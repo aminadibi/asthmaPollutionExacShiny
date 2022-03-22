@@ -22,6 +22,10 @@ asthmaICER <- function (pGA=0.25,
                         c_tx=2.49*2*30,
                         cExacMean=0.4*575+0.6*126,
                         cGeneTest=199*(3796/7212)*(125.9/120.5),
+                        uExacModAlpha=0.51,
+                        uExacModBeta=0.38,
+                        uExacERAlpha=0.36,
+                        uExacERBeta=0.45,
                         wtp=50000
 ) {
 
@@ -70,10 +74,10 @@ asthmaICER <- function (pGA=0.25,
     ##############
 
 
-    u_ex_med<-rbeta(1,0.51, 0.38)
-    u_ex_ER<-rbeta(1,0.36, 0.25)
-    qloss_exca  <- (1-(u_ex_med*0.6+u_ex_ER*0.4))*15/365
-    qloss_notexca  <- 0*15/365
+    uExacModerate <-rbeta(1,uExacModAlpha, uExacModBeta)
+    uExacER  <-rbeta(1,uExacERAlpha, uExacERBeta)
+    qLossExac  <- (1-(uExacModerate*0.6+uExacER*0.4))*15/365
+    qLossNoExac  <- 0*15/365
 
     ############
 
@@ -100,9 +104,9 @@ asthmaICER <- function (pGA=0.25,
     C.OnlyGAs<-c.5*p.exa.withtr.GA*0.25 +c.6*(1-p.exa.withtr.GA)*0.25+c.7*pExacNoTxNoGA*0.75 +c.8*(1-pExacNoTxNoGA)*0.75
     C.all<-c.9*p.exa.withtr.GA*0.25+c.10*(1-p.exa.withtr.GA)*0.25+c.11*pExacTxNoGA*0.75+c.12*(1-pExacTxNoGA)*0.75
 
-    q.notreatment<-qloss_exca*p.exa.Notr.GA*0.25+qloss_notexca *(1-p.exa.Notr.GA)*0.25+qloss_exca*pExacNoTxNoGA*0.75+qloss_notexca*(1-pExacNoTxNoGA)*0.75
-    q.OnlyGAs<-qloss_exca*p.exa.withtr.GA*0.25 +qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*pExacNoTxNoGA*0.75 +qloss_notexca *(1-pExacNoTxNoGA)*0.75
-    q.all<-qloss_exca*p.exa.withtr.GA*0.25+qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*pExacTxNoGA*0.75+qloss_notexca*(1-pExacTxNoGA)*0.75
+    q.notreatment<-qLossExac*p.exa.Notr.GA*0.25+qLossNoExac *(1-p.exa.Notr.GA)*0.25+qLossExac*pExacNoTxNoGA*0.75+qLossNoExac*(1-pExacNoTxNoGA)*0.75
+    q.OnlyGAs<-qLossExac*p.exa.withtr.GA*0.25 +qLossNoExac*(1-p.exa.withtr.GA)*0.25+qLossExac*pExacNoTxNoGA*0.75 +qLossNoExac *(1-pExacNoTxNoGA)*0.75
+    q.all<-qLossExac*p.exa.withtr.GA*0.25+qLossNoExac*(1-p.exa.withtr.GA)*0.25+qLossExac*pExacTxNoGA*0.75+qLossNoExac*(1-pExacTxNoGA)*0.75
 
     res[k,]=c(k,C.notreatment,C.OnlyGAs,C.all,q.notreatment,q.OnlyGAs,q.all)
   }
