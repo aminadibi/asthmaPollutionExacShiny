@@ -390,7 +390,7 @@ server <- function(input, output) {
                   uExacModBeta      = input$uExacModBeta ,
                   uExacERAlpha      = input$uExacERAlpha ,
                   uExacERBeta       = input$uExacERBeta,
-                  wtp               = input$wtp,
+                  wtp               = input$wtp
        ))
     }, digits = 5)
 
@@ -399,15 +399,19 @@ server <- function(input, output) {
       paste0("At a willingess to pay of $",
       input$wtp,
       " the probability of the targeted intervention being cost-effective is ",
-      100*wtpProb(asthmaICER(pGA                 = input$pGA,
+      100*wtpProb(asthmaICER(pGA               = input$pGA,
                              pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                             pExacTxNoGA   = input$pExacTxNoGA,
-                             wtp                  = input$wtp,
-                             pExacNoTxGA   = input$pExacNoTxGA   ,
-                             pExacTxGA = input$pExacTxGA ,
-                             c_tx       = input$c_tx       ,
-                             cExacMean        = input$cExacMean        ,
-                             cGeneTest      = input$cGeneTest      ,
+                             pExacTxNoGA       = input$pExacTxNoGA,
+                             pExacNoTxGA       = input$pExacNoTxGA,
+                             pExacTxGA         = input$pExacTxGA,
+                             c_tx              = input$c_tx,
+                             cExacMean         = input$cExacMean,
+                             cGeneTest         = input$cGeneTest,
+                             uExacModAlpha     = input$uExacModAlpha,
+                             uExacModBeta      = input$uExacModBeta ,
+                             uExacERAlpha      = input$uExacERAlpha ,
+                             uExacERBeta       = input$uExacERBeta,
+                             wtp               = input$wtp
                              ),
               wtp=input$wtp), "%")
 
