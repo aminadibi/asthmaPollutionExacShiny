@@ -26,6 +26,8 @@ asthmaICER <- function (pGA=0.25,
                         uExacModBeta=0.38,
                         uExacERAlpha=0.36,
                         uExacERBeta=0.45,
+                        # uExacHospAlpha=0.15,
+                        # uExacHospBeta=0.30,
                         wtp=50000
 ) {
 
@@ -285,6 +287,60 @@ testing? Pharmacogenomics J 2017; 17: 1–3."),
                    type = "inline",
                    content = "Campbell JD, Spackman DE, Sullivan SD. The costs and consequences of omalizumab in uncontrolled asthma
 from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
+          p(strong("Utilities - Exacerbation without hospitalization (Beta Distribution)")),
+          fluidRow(
+          column(4,
+                   numericInput("uExacModAlpha",
+                       "Alpha",
+                       min = 0,
+                       max = 100,
+                       value = 0.51,
+                       step = 1)),
+          column(4,
+                 numericInput("uExacModBeta",
+                              "Beta",
+                              min = 0,
+                              max = 100,
+                              value = 0.38,
+                              step = 1))
+          ),
+
+        p(strong("Utilities - Exacerbation requiring ER visit  (Beta Distribution)")),
+        fluidRow(
+          column(4,
+                 numericInput("uExacERAlpha",
+                              "Alpha",
+                              min = 0,
+                              max = 100,
+                              value = 0.36,
+                              step = 1)),
+          column(4,
+                 numericInput("uExacERBeta",
+                              "Beta",
+                              min = 0,
+                              max = 100,
+                              value = 0.45,
+                              step = 1))
+        ),
+
+        # p(strong("Utilities - Exacerbation requiring ER visit (Beta Distribution)")),
+        # fluidRow(
+        #   column(4,
+        #          numericInput("uExacHospAlpha",
+        #                       "Alpha",
+        #                       min = 0,
+        #                       max = 100,
+        #                       value = 0.15,
+        #                       step = 1)),
+        #   column(4,
+        #          numericInput("uExacHospBeta",
+        #                       "Beta",
+        #                       min = 0,
+        #                       max = 100,
+        #                       value = 0.30,
+        #                       step = 1))
+        # ),
+
 
           numericInput("wtp",
                        "Willingness to Pay",
@@ -294,6 +350,9 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
                        step = 10000)
         ),
 
+
+
+#uExacModAlpha
         # Show a plot of the generated distribution
         mainPanel(
           tabsetPanel(type="tabs",
@@ -319,15 +378,20 @@ server <- function(input, output) {
 
     output$ICER <- renderTable({
       sequentialICER(
-       asthmaICER(pGA                 = input$pGA,
+       asthmaICER(pGA               = input$pGA,
                   pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                  pExacTxNoGA   = input$pExacTxNoGA,
-                  wtp                  = input$wtp,
-                  pExacNoTxGA   = input$pExacNoTxGA   ,
-                  pExacTxGA = input$pExacTxGA ,
-                  c_tx       = input$c_tx       ,
-                  cExacMean        = input$cExacMean        ,
-                  cGeneTest      = input$cGeneTest       ))
+                  pExacTxNoGA       = input$pExacTxNoGA,
+                  pExacNoTxGA       = input$pExacNoTxGA,
+                  pExacTxGA         = input$pExacTxGA,
+                  c_tx              = input$c_tx,
+                  cExacMean         = input$cExacMean,
+                  cGeneTest         = input$cGeneTest,
+                  uExacModAlpha     = input$uExacModAlpha,
+                  uExacModBeta      = input$uExacModBeta ,
+                  uExacERAlpha      = input$uExacERAlpha ,
+                  uExacERBeta       = input$uExacERBeta,
+                  wtp               = input$wtp,
+       ))
     }, digits = 5)
 
     output$wtpProb <- renderText({
@@ -343,7 +407,8 @@ server <- function(input, output) {
                              pExacTxGA = input$pExacTxGA ,
                              c_tx       = input$c_tx       ,
                              cExacMean        = input$cExacMean        ,
-                             cGeneTest      = input$cGeneTest       ),
+                             cGeneTest      = input$cGeneTest      ,
+                             ),
               wtp=input$wtp), "%")
 
     })
