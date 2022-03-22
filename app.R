@@ -8,9 +8,11 @@
 #
 
 library(shiny)
+library(shinyhelper)
 library(tibble)
 library(markdown)
 library(dplyr)
+
 
 asthmaICER <- function (p.GA=0.25,
                         p.exa.Notr.notGA=0,
@@ -200,46 +202,85 @@ ui <- fluidPage(
                        min = 0,
                        max = 1,
                        value = 0,
-                       step = 0.01),
+                       step = 0.01) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = "Assumption"),
 
           numericInput("p.exa.withtr.notGA",
                        "Probability of Exacerbations with Tx - No Genetic Abnormality",
                        min = 0,
                        max = 1,
                        value = 0,
-                       step = 0.01),
+                       step = 0.01) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = "Assumption"),
           numericInput ("p.exa.Notr.GA.mean",
                         "Probability of Exacerbation without Tx - Genetic Abnormality",
                         min = 0,
                         max = 1,
                         value = 0.55,
-                        step = 0.01),
+                        step = 0.01) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
+23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
+therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
           numericInput ("p.exa.withtr.GA.mean",
-                        "Probability of Exacerbation without Tx - Genetic Abnormality",
+                        "Probability of Exacerbation with Tx - Genetic Abnormality",
                         min = 0,
                         max = 1,
                         value = 0.05,
-                        step = 0.01),
+                        step = 0.01) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
+23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
+therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
           numericInput ("Cost_treatemnt",
                         "Cost of Treatment",
                         min = 0,
                         max = 1000,
                         value = 149.4,
                         step = 10
-                          ),
+                          ) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = "Minelli C, Granell R, Newson R, et al. Glutathione-S-transferase genes and asthma phenotypes: a Human Genome
+Epidemiology (HuGE) systematic review and meta-analysis including unpublished data. Int J Epidemiol 2010; 39:
+539–562."),
           numericInput ("cost_exacmean",
                         "Mean Exacerbation Cost",
                         min = 0,
                         max = 1000,
                         value = 305.6,
                         step = 10
-                        ),
+                        ) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
+testing? Pharmacogenomics J 2017; 17: 1–3."),
+
           numericInput ("Cost_genetic_id",
                         "Cost for Genetic Test",
                         min = 0,
                         max = 1000,
                         value = 109.44,
-                        step = 10),
+                        step = 10) %>%
+            helper(icon = "question-circle",
+                   colour = "black",
+                   type = "inline",
+                   content = "Campbell JD, Spackman DE, Sullivan SD. The costs and consequences of omalizumab in uncontrolled asthma
+from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
 
           numericInput("wtp",
                        "Willingness to Pay",
@@ -270,6 +311,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
+  observe_helpers(help_dir = "helpfiles")
 
     output$ICER <- renderTable({
       sequentialICER(
