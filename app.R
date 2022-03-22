@@ -14,18 +14,18 @@ library(markdown)
 library(dplyr)
 
 
-asthmaICER <- function (p.GA=0.25,
-                        p.exa.Notr.notGA=0,
-                        p.exa.withtr.notGA=0,
-                        p.exa.Notr.GA.mean =0.55,
-                        p.exa.withtr.GA.mean = 0.05,
-                        Cost_treatemnt=2.49*2*30,
-                        cost_exacmean=0.4*575+0.6*126,
-                        Cost_genetic_id=199*(3796/7212)*(125.9/120.5),
+asthmaICER <- function (pGA=0.25,
+                        pExacNoTxNoGA=0,
+                        pExacTxNoGA=0,
+                        pExacNoTxGA =0.55,
+                        pExacTxGA = 0.05,
+                        c_tx=2.49*2*30,
+                        cExacMean=0.4*575+0.6*126,
+                        cGeneTest=199*(3796/7212)*(125.9/120.5),
                         wtp=50000
 ) {
 
-  p.notGA=1-p.GA
+  p.notGA=1-pGA
   ####################### Input Model Parameters   ############################################
   res=matrix(NA,nrow=1000,ncol=7)
   colnames(res)<-c("run","notreatment_cost","only GA_cost","All_cost","Q_notreatment",
@@ -45,13 +45,13 @@ asthmaICER <- function (p.GA=0.25,
   }
 
 
-  p.exa.Notr.GA.SD<-p.exa.Notr.GA.mean*(0.2/1.96)
+  p.exa.Notr.GA.SD<-pExacNoTxGA*(0.2/1.96)
 
-  p.exa.withtr.GA.SD<- p.exa.withtr.GA.mean*(0.2/1.96)
+  p.exa.withtr.GA.SD<- pExacTxGA*(0.2/1.96)
 
   #############
 
-  cost_exacSD=(0.2/1.96)* cost_exacmean
+  cost_exacSD=(0.2/1.96)* cExacMean
 
 
 
@@ -59,13 +59,13 @@ asthmaICER <- function (p.GA=0.25,
   for (k in 1:1000){
     #########
 
-    p.exa.Notr.GA.Par<-BetaPar(p.exa.Notr.GA.mean,p.exa.Notr.GA.SD)
+    p.exa.Notr.GA.Par<-BetaPar(pExacNoTxGA,p.exa.Notr.GA.SD)
     p.exa.Notr.GA<-rbeta(1,p.exa.Notr.GA.Par$alpha,p.exa.Notr.GA.Par$beta)
 
     ###########
 
 
-    p.exa.withtr.GA.Par<-BetaPar(p.exa.withtr.GA.mean,p.exa.withtr.GA.SD)
+    p.exa.withtr.GA.Par<-BetaPar(pExacTxGA,p.exa.withtr.GA.SD)
     p.exa.withtr.GA<- rbeta(1,p.exa.withtr.GA.Par$alpha,p.exa.withtr.GA.Par$beta)
     ##############
 
@@ -77,32 +77,32 @@ asthmaICER <- function (p.GA=0.25,
 
     ############
 
-    cost_exacpar<-gammaPar(cost_exacmean, cost_exacSD)
+    cost_exacpar<-gammaPar(cExacMean, cost_exacSD)
     cost_exac<-rgamma(1,cost_exacpar$a,cost_exacpar$b)
 
     c.1 <- cost_exac
     c.2 <- 0
     c.3 <- cost_exac
     c.4 <-  0
-    c.5 <- cost_exac+ Cost_treatemnt+Cost_genetic_id
-    c.6 <-Cost_treatemnt+Cost_genetic_id
-    c.7 <- cost_exac+ Cost_genetic_id
-    c.8 <-Cost_genetic_id
-    c.9 <-cost_exac+ Cost_treatemnt
-    c.10 <-Cost_treatemnt
-    c.11 <-cost_exac+ Cost_treatemnt
-    c.12 <- Cost_treatemnt
+    c.5 <- cost_exac+ c_tx+cGeneTest
+    c.6 <-c_tx+cGeneTest
+    c.7 <- cost_exac+ cGeneTest
+    c.8 <-cGeneTest
+    c.9 <-cost_exac+ c_tx
+    c.10 <-c_tx
+    c.11 <-cost_exac+ c_tx
+    c.12 <- c_tx
 
 
     #################### ## ########################################
 
-    C.notreatment<-c.1*p.exa.Notr.GA*0.25+c.2 *(1-p.exa.Notr.GA)*0.25+c.3*p.exa.Notr.notGA*0.75+c.4*(1-p.exa.Notr.notGA)*0.75
-    C.OnlyGAs<-c.5*p.exa.withtr.GA*0.25 +c.6*(1-p.exa.withtr.GA)*0.25+c.7*p.exa.Notr.notGA*0.75 +c.8*(1-p.exa.Notr.notGA)*0.75
-    C.all<-c.9*p.exa.withtr.GA*0.25+c.10*(1-p.exa.withtr.GA)*0.25+c.11*p.exa.withtr.notGA*0.75+c.12*(1-p.exa.withtr.notGA)*0.75
+    C.notreatment<-c.1*p.exa.Notr.GA*0.25+c.2 *(1-p.exa.Notr.GA)*0.25+c.3*pExacNoTxNoGA*0.75+c.4*(1-pExacNoTxNoGA)*0.75
+    C.OnlyGAs<-c.5*p.exa.withtr.GA*0.25 +c.6*(1-p.exa.withtr.GA)*0.25+c.7*pExacNoTxNoGA*0.75 +c.8*(1-pExacNoTxNoGA)*0.75
+    C.all<-c.9*p.exa.withtr.GA*0.25+c.10*(1-p.exa.withtr.GA)*0.25+c.11*pExacTxNoGA*0.75+c.12*(1-pExacTxNoGA)*0.75
 
-    q.notreatment<-qloss_exca*p.exa.Notr.GA*0.25+qloss_notexca *(1-p.exa.Notr.GA)*0.25+qloss_exca*p.exa.Notr.notGA*0.75+qloss_notexca*(1-p.exa.Notr.notGA)*0.75
-    q.OnlyGAs<-qloss_exca*p.exa.withtr.GA*0.25 +qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*p.exa.Notr.notGA*0.75 +qloss_notexca *(1-p.exa.Notr.notGA)*0.75
-    q.all<-qloss_exca*p.exa.withtr.GA*0.25+qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*p.exa.withtr.notGA*0.75+qloss_notexca*(1-p.exa.withtr.notGA)*0.75
+    q.notreatment<-qloss_exca*p.exa.Notr.GA*0.25+qloss_notexca *(1-p.exa.Notr.GA)*0.25+qloss_exca*pExacNoTxNoGA*0.75+qloss_notexca*(1-pExacNoTxNoGA)*0.75
+    q.OnlyGAs<-qloss_exca*p.exa.withtr.GA*0.25 +qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*pExacNoTxNoGA*0.75 +qloss_notexca *(1-pExacNoTxNoGA)*0.75
+    q.all<-qloss_exca*p.exa.withtr.GA*0.25+qloss_notexca*(1-p.exa.withtr.GA)*0.25+qloss_exca*pExacTxNoGA*0.75+qloss_notexca*(1-pExacTxNoGA)*0.75
 
     res[k,]=c(k,C.notreatment,C.OnlyGAs,C.all,q.notreatment,q.OnlyGAs,q.all)
   }
@@ -190,14 +190,14 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-          # numericInput("p.GA",
+          # numericInput("pGA",
           #              "Probability of Genetic Abnormality",
           #              min = 0,
           #              max = 1,
           #              value = 0.25,
           #              step = 0.01),
 
-          numericInput("p.exa.Notr.notGA",
+          numericInput("pExacNoTxNoGA",
                        "Probability of Exacerbations without Tx -  No Genetic Abnormality",
                        min = 0,
                        max = 1,
@@ -208,7 +208,7 @@ ui <- fluidPage(
                    type = "inline",
                    content = "Assumption"),
 
-          numericInput("p.exa.withtr.notGA",
+          numericInput("pExacTxNoGA",
                        "Probability of Exacerbations with Tx - No Genetic Abnormality",
                        min = 0,
                        max = 1,
@@ -218,7 +218,7 @@ ui <- fluidPage(
                    colour = "black",
                    type = "inline",
                    content = "Assumption"),
-          numericInput ("p.exa.Notr.GA.mean",
+          numericInput ("pExacNoTxGA",
                         "Probability of Exacerbation without Tx - Genetic Abnormality",
                         min = 0,
                         max = 1,
@@ -231,7 +231,7 @@ ui <- fluidPage(
 adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
 23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
-          numericInput ("p.exa.withtr.GA.mean",
+          numericInput ("pExacTxGA",
                         "Probability of Exacerbation with Tx - Genetic Abnormality",
                         min = 0,
                         max = 1,
@@ -244,7 +244,7 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
 adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
 23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
-          numericInput ("Cost_treatemnt",
+          numericInput ("c_tx",
                         "Cost of Treatment",
                         min = 0,
                         max = 1000,
@@ -257,7 +257,7 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
                    content = "Minelli C, Granell R, Newson R, et al. Glutathione-S-transferase genes and asthma phenotypes: a Human Genome
 Epidemiology (HuGE) systematic review and meta-analysis including unpublished data. Int J Epidemiol 2010; 39:
 539–562."),
-          numericInput ("cost_exacmean",
+          numericInput ("cExacMean",
                         "Mean Exacerbation Cost",
                         min = 0,
                         max = 1000,
@@ -270,7 +270,7 @@ Epidemiology (HuGE) systematic review and meta-analysis including unpublished da
                    content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
 testing? Pharmacogenomics J 2017; 17: 1–3."),
 
-          numericInput ("Cost_genetic_id",
+          numericInput ("cGeneTest",
                         "Cost for Genetic Test",
                         min = 0,
                         max = 1000,
@@ -315,15 +315,15 @@ server <- function(input, output) {
 
     output$ICER <- renderTable({
       sequentialICER(
-       asthmaICER(p.GA                 = input$p.GA,
-                  p.exa.Notr.notGA     = input$p.exa.Notr.notGA,
-                  p.exa.withtr.notGA   = input$p.exa.withtr.notGA,
+       asthmaICER(pGA                 = input$pGA,
+                  pExacNoTxNoGA     = input$pExacNoTxNoGA,
+                  pExacTxNoGA   = input$pExacTxNoGA,
                   wtp                  = input$wtp,
-                  p.exa.Notr.GA.mean   = input$p.exa.Notr.GA.mean   ,
-                  p.exa.withtr.GA.mean = input$p.exa.withtr.GA.mean ,
-                  Cost_treatemnt       = input$Cost_treatemnt       ,
-                  cost_exacmean        = input$cost_exacmean        ,
-                  Cost_genetic_id      = input$Cost_genetic_id       ))
+                  pExacNoTxGA   = input$pExacNoTxGA   ,
+                  pExacTxGA = input$pExacTxGA ,
+                  c_tx       = input$c_tx       ,
+                  cExacMean        = input$cExacMean        ,
+                  cGeneTest      = input$cGeneTest       ))
     }, digits = 5)
 
     output$wtpProb <- renderText({
@@ -331,15 +331,15 @@ server <- function(input, output) {
       paste0("At a willingess to pay of $",
       input$wtp,
       " the probability of the targeted intervention being cost-effective is ",
-      100*wtpProb(asthmaICER(p.GA                 = input$p.GA,
-                             p.exa.Notr.notGA     = input$p.exa.Notr.notGA,
-                             p.exa.withtr.notGA   = input$p.exa.withtr.notGA,
+      100*wtpProb(asthmaICER(pGA                 = input$pGA,
+                             pExacNoTxNoGA     = input$pExacNoTxNoGA,
+                             pExacTxNoGA   = input$pExacTxNoGA,
                              wtp                  = input$wtp,
-                             p.exa.Notr.GA.mean   = input$p.exa.Notr.GA.mean   ,
-                             p.exa.withtr.GA.mean = input$p.exa.withtr.GA.mean ,
-                             Cost_treatemnt       = input$Cost_treatemnt       ,
-                             cost_exacmean        = input$cost_exacmean        ,
-                             Cost_genetic_id      = input$Cost_genetic_id       ),
+                             pExacNoTxGA   = input$pExacNoTxGA   ,
+                             pExacTxGA = input$pExacTxGA ,
+                             c_tx       = input$c_tx       ,
+                             cExacMean        = input$cExacMean        ,
+                             cGeneTest      = input$cGeneTest       ),
               wtp=input$wtp), "%")
 
     })
