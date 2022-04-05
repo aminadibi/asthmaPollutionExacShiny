@@ -12,7 +12,8 @@ library(shinyhelper)
 library(tibble)
 library(markdown)
 library(dplyr)
-
+library(ggplot2)
+library(ggthemes)
 
 asthmaICER <- function (pGA=0.25,
                         pExacNoTxNoGA=0,
@@ -179,15 +180,22 @@ wtpProb <- function(res, wtp) {
 }
 
 
-# wtpPlot <- function(res) {
-#   df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA)
-#   for (i in 1:dim(df)[1]) {
-#
-#   }
-#
-#
-#        )
-# }
+wtpPlot <- function(res) {
+   df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA)
+   for (i in 1:dim(df)[1]) {
+
+     df[i, 2] <- wtpProb(res, as.numeric(df[i,1]))
+   }
+
+  p <- ggplot(df) +
+        geom_line(aes(y=100*wtp_met, x=wtp)) +
+        ylab("Probability of Being Cost-Effective") +
+        xlab("Willingness-to-Pay Threhold") +
+        theme_bw()
+
+  return(p)
+
+}
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -373,7 +381,8 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
           tabsetPanel(type="tabs",
                       tabPanel("ICER",
                                tableOutput("ICER"),
-                               textOutput("wtpProb")
+                               textOutput("wtpProb"),
+                               plotOutput("acceptability")
                       ),
                       tabPanel("Terms",  includeMarkdown("./disclaimer.Rmd")),
                       tabPanel("About",  includeMarkdown("./about.Rmd"))#,
@@ -432,6 +441,25 @@ server <- function(input, output) {
                              ),
               wtp=input$wtp), "%")
 
+    })
+
+    output$acceptability <- renderPlot({
+
+      wtpPlot(res = asthmaICER(pGA               = input$pGA,
+                               pExacNoTxNoGA     = input$pExacNoTxNoGA,
+                               pExacTxNoGA       = input$pExacTxNoGA,
+                               pExacNoTxGA       = input$pExacNoTxGA,
+                               pExacTxGA         = input$pExacTxGA,
+                               c_tx              = input$c_tx,
+                               cExacER           = input$cExacER,
+                               cExacNoHosp       = input$cExacNoHosp,
+                               cGeneTest         = input$cGeneTest,
+                               uExacModAlpha     = input$uExacModAlpha,
+                               uExacModBeta      = input$uExacModBeta ,
+                               uExacERAlpha      = input$uExacERAlpha ,
+                               uExacERBeta       = input$uExacERBeta,
+                               wtp               = input$wtp
+      ))
     })
 }
 
