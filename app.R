@@ -194,7 +194,7 @@ wtpPlot <- function(res) {
         xlab("Willingness-to-Pay Threhold") +
         scale_colour_brewer(palette = "Dark2") +
         ft_theme() +
-        ggtitle("Cost-effectiveness Acceptability Curve") +
+        ggtitle("Cost-Effectiveness Acceptability Curve") +
         theme(text = element_text(size=12)) +
         theme(legend.position = "none") +
         theme(legend.title=element_blank())
@@ -259,7 +259,7 @@ fluidRow(
            helper(icon = "question-circle",
                   colour = "black",
                   type = "inline",
-                  content = "Assumption")),
+                  content = "Assumption.")),
   column(4,
          numericInput("pExacTxGA",
                       "Genetic Abnormality",
@@ -402,6 +402,8 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
         mainPanel(
           tabsetPanel(type="tabs",
                       tabPanel("ICER",
+                               br(),
+                               div(id = "background", includeMarkdown("./background.rmd")),
                                tableOutput("ICER"),
                                textOutput("wtpProb"),
                                plotlyOutput("acceptability")

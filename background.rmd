@@ -1,0 +1,11 @@
+---
+title: "Background"
+---
+
+The modelled intervention is prescribing additional ICS and long-acting β-agonists (LABA) (Advair 500/50 μg twice a day) for 2 months each summer starting on July 1st as a proactive treatment to mitigate increased risk of exacerbations due to fire smoke.
+
+The analysis focuses on the effect of glutathione-S-transferases (GST) genes on the susceptibility of individuals to exacerbations during wildfire season. Genetic abnormality was defined as having one of the following genotypes: GSTT1 null or GSTM1 null or GSTP1 Ile105Val. These were chosen based on their well-established influence on clinically relevant respiratory responses to air pollution, including acute decrements in lung function and associated disease exacerbations.
+
+For a detailed description of the model, please refer to the [publication](https://doi.org/10.1183/23120541.00790-2020). 
+
+You can explore the results interactively by changing model input parameters and observing their impact on the results. 
