@@ -13,6 +13,7 @@ library(tibble)
 library(markdown)
 library(dplyr)
 library(ggplot2)
+library(purrr)
 library(ftplottools)
 
 
@@ -167,8 +168,8 @@ sequentialICER <- function(res) {
 
 }
 
-wtpProb <- function(res, wtp) {
-  # plotting
+wtpProb <- function(wtp, res) {
+
   res_ICER_prob <- as_tibble(res)
   res_ICER_prob <- res_ICER_prob %>%
     mutate(ICER_OnlyGAs = (`only GA_cost`-notreatment_cost)/(-Q_onlyGAs + Q_notreatment)) %>%
@@ -182,11 +183,9 @@ wtpProb <- function(res, wtp) {
 
 
 wtpPlot <- function(res) {
-   df <- tibble(wtp = seq(10000, 200000, by=1000), wtp_met=NA)
-   for (i in 1:dim(df)[1]) {
 
-     df[i, 2] <- wtpProb(res, as.numeric(df[i,1]))
-   }
+  df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA) %>%
+     mutate (wtp_met=map_dbl(wtp, wtpProb, res=res))
 
   p <- ggplot(df, aes(y=100*wtp_met, x=wtp)) +
         geom_line(size=1.2) +
@@ -446,7 +445,7 @@ server <- function(input, output) {
       paste0("At a willingess to pay of $",
       input$wtp,
       " the probability of the targeted intervention being cost-effective is ",
-      100*wtpProb(asthmaICER(pGA               = input$pGA,
+      100*wtpProb(res=asthmaICER(pGA               = input$pGA,
                              pExacNoTxNoGA     = input$pExacNoTxNoGA,
                              pExacTxNoGA       = input$pExacTxNoGA,
                              pExacNoTxGA       = input$pExacNoTxGA,
