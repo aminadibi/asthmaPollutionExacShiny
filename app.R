@@ -218,7 +218,7 @@ ui <- fluidPage(
           #              max = 1,
           #              value = 0.25,
           #              step = 0.01),
-          p(strong("Probability of Exacerbations without Tx")),
+          p(strong("Probability of Exacerbations without Treatment")),
           fluidRow(
             column(4,
                    numericInput("pExacNoTxNoGA",
@@ -247,31 +247,35 @@ adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
           )),
 
-
-          numericInput("pExacTxNoGA",
-                       "Probability of Exacerbations with Tx - No Genetic Abnormality",
-                       min = 0,
-                       max = 1,
-                       value = 0,
-                       step = 0.01) %>%
-            helper(icon = "question-circle",
-                   colour = "black",
-                   type = "inline",
-                   content = "Assumption"),
-
-          numericInput ("pExacTxGA",
-                        "Probability of Exacerbation with Tx - Genetic Abnormality",
-                        min = 0,
-                        max = 1,
-                        value = 0.05,
-                        step = 0.01) %>%
-            helper(icon = "question-circle",
-                   colour = "black",
-                   type = "inline",
-                   content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+p(strong("Probability of Exacerbations with Treatment")),
+fluidRow(
+  column(4,
+         numericInput("pExacTxNoGA",
+                      "No Genetic Abnormality",
+                      min = 0,
+                      max = 1,
+                      value = 0,
+                      step = 0.01) %>%
+           helper(icon = "question-circle",
+                  colour = "black",
+                  type = "inline",
+                  content = "Assumption")),
+  column(4,
+         numericInput("pExacTxGA",
+                      "Genetic Abnormality",
+                      min = 0,
+                      max = 1,
+                      value = 0.05,
+                      step = 0.01) %>%
+           helper(icon = "question-circle",
+                  colour = "black",
+                  type = "inline",
+                  content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
 adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
 23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
-therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
+therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
+  )),
+
           numericInput ("c_tx",
                         "Cost of Treatment",
                         min = 0,
@@ -285,6 +289,7 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
                    content = "Minelli C, Granell R, Newson R, et al. Glutathione-S-transferase genes and asthma phenotypes: a Human Genome
 Epidemiology (HuGE) systematic review and meta-analysis including unpublished data. Int J Epidemiol 2010; 39:
 539–562."),
+
           numericInput ("cExacER",
                         "Cost of Exacerbation requiring ER Visit",
                         min = 0,
