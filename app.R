@@ -15,6 +15,7 @@ library(dplyr)
 library(ggplot2)
 library(purrr)
 library(ftplottools)
+library(plotly)
 
 
 asthmaICER <- function (pGA=0.25,
@@ -185,10 +186,10 @@ wtpProb <- function(wtp, res) {
 wtpPlot <- function(res) {
 
   df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA) %>%
-     mutate (wtp_met=map_dbl(wtp, wtpProb, res=res))
+     mutate (wtp_met=100*map_dbl(wtp, wtpProb, res=res))
 
-  p <- ggplot(df, aes(y=100*wtp_met, x=wtp)) +
-        geom_line(size=1.2) +
+  p <- ggplot(df, aes(y=wtp_met, x=wtp)) +
+        geom_line(size=1.2, color="coral2") +
         ylab("Probability of Being Cost-Effective") +
         xlab("Willingness-to-Pay Threhold") +
         scale_colour_brewer(palette = "Dark2") +
@@ -403,7 +404,7 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
                       tabPanel("ICER",
                                tableOutput("ICER"),
                                textOutput("wtpProb"),
-                               plotOutput("acceptability")
+                               plotlyOutput("acceptability")
                       ),
                       tabPanel("Terms",  includeMarkdown("./disclaimer.Rmd")),
                       tabPanel("About",  includeMarkdown("./about.Rmd"))#,
@@ -464,10 +465,10 @@ server <- function(input, output) {
 
     })
 
-    output$acceptability <- renderPlot({
+    output$acceptability <- renderPlotly({
 
 
-      wtpPlot(res = asthmaICER(pGA               = input$pGA,
+      p <- wtpPlot(res = asthmaICER(pGA               = input$pGA,
                                pExacNoTxNoGA     = input$pExacNoTxNoGA,
                                pExacTxNoGA       = input$pExacTxNoGA,
                                pExacNoTxGA       = input$pExacNoTxGA,
@@ -482,6 +483,7 @@ server <- function(input, output) {
                                uExacERBeta       = input$uExacERBeta,
                                wtp               = input$wtp
       ))
+      ggplotly(p)
     })
 }
 
