@@ -13,7 +13,8 @@ library(tibble)
 library(markdown)
 library(dplyr)
 library(ggplot2)
-library(ggthemes)
+library(ftplottools)
+
 
 asthmaICER <- function (pGA=0.25,
                         pExacNoTxNoGA=0,
@@ -188,10 +189,15 @@ wtpPlot <- function(res) {
    }
 
   p <- ggplot(df) +
-        geom_line(aes(y=100*wtp_met, x=wtp)) +
+        geom_line(aes(y=100*wtp_met, x=wtp), size=1) +
         ylab("Probability of Being Cost-Effective") +
         xlab("Willingness-to-Pay Threhold") +
-        theme_bw()
+        scale_colour_brewer(palette = "Dark2") +
+        ft_theme() +
+        ggtitle("Cost-effectiveness Acceptability Curve") +
+        theme(text = element_text(size=12)) +
+        theme(legend.position = "none") +
+        theme(legend.title=element_blank())
 
   return(p)
 
@@ -444,6 +450,7 @@ server <- function(input, output) {
     })
 
     output$acceptability <- renderPlot({
+
 
       wtpPlot(res = asthmaICER(pGA               = input$pGA,
                                pExacNoTxNoGA     = input$pExacNoTxNoGA,
