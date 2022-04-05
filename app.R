@@ -182,14 +182,14 @@ wtpProb <- function(res, wtp) {
 
 
 wtpPlot <- function(res) {
-   df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA)
+   df <- tibble(wtp = seq(10000, 200000, by=1000), wtp_met=NA)
    for (i in 1:dim(df)[1]) {
 
      df[i, 2] <- wtpProb(res, as.numeric(df[i,1]))
    }
 
-  p <- ggplot(df) +
-        geom_line(aes(y=100*wtp_met, x=wtp), size=1) +
+  p <- ggplot(df, aes(y=100*wtp_met, x=wtp)) +
+        geom_line(size=1.2) +
         ylab("Probability of Being Cost-Effective") +
         xlab("Willingness-to-Pay Threhold") +
         scale_colour_brewer(palette = "Dark2") +
