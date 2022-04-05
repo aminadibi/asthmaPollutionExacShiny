@@ -290,31 +290,36 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
 Epidemiology (HuGE) systematic review and meta-analysis including unpublished data. Int J Epidemiol 2010; 39:
 539–562."),
 
-          numericInput ("cExacER",
-                        "Cost of Exacerbation requiring ER Visit",
-                        min = 0,
-                        max = 1000,
-                        value = 575,
-                        step = 10
-                        ) %>%
-            helper(icon = "question-circle",
-                   colour = "black",
-                   type = "inline",
-                   content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
-testing? Pharmacogenomics J 2017; 17: 1–3."),
 
-          numericInput ("cExacNoHosp",
-                        "Cost of Exacerbation Without Hospitalization",
-                        min = 0,
-                        max = 1000,
-                        value = 126,
-                        step = 10
-          ) %>%
-            helper(icon = "question-circle",
-                   colour = "black",
-                   type = "inline",
-                   content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
-          testing? Pharmacogenomics J 2017; 17: 1–3."),
+p(strong("Cost of Exacerbations")),
+fluidRow(
+  column(4,
+         numericInput("cExacER",
+                      "requiring ER Visit",
+                      min = 0,
+                      max = 1000,
+                      value = 575,
+                      step = 10) %>%
+           helper(icon = "question-circle",
+                  colour = "black",
+                  type = "inline",
+                  content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
+testing? Pharmacogenomics J 2017; 17: 1–3.")),
+  column(4,
+         numericInput("cExacNoHosp",
+                      "No Hospitalization",
+                      min = 0,
+                      max = 1000,
+                      value = 126,
+                      step = 10) %>%
+           helper(icon = "question-circle",
+                  colour = "black",
+                  type = "inline",
+                  content = c("Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
+testing? Pharmacogenomics J 2017; 17: 1–3."))
+  )),
+
+
 
           numericInput ("cGeneTest",
                         "Cost for Genetic Test",
