@@ -218,17 +218,35 @@ ui <- fluidPage(
           #              max = 1,
           #              value = 0.25,
           #              step = 0.01),
+          p(strong("Probability of Exacerbations without Tx")),
+          fluidRow(
+            column(4,
+                   numericInput("pExacNoTxNoGA",
+                                "No Genetic Abnormality",
+                                min = 0,
+                                max = 1,
+                                value = 0,
+                                step = 0.01) %>%
+                     helper(icon = "question-circle",
+                            colour = "black",
+                            type = "inline",
+                            content = "Assumption")),
+            column(4,
+                   numericInput("pExacNoTxGA",
+                                "Genetic Abnormality",
+                                min = 0,
+                                max = 1,
+                                value = 0.55,
+                                step = 0.01) %>%
+                     helper(icon = "question-circle",
+                            colour = "black",
+                            type = "inline",
+                            content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
+23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
+therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
+          )),
 
-          numericInput("pExacNoTxNoGA",
-                       "Probability of Exacerbations without Tx -  No Genetic Abnormality",
-                       min = 0,
-                       max = 1,
-                       value = 0,
-                       step = 0.01) %>%
-            helper(icon = "question-circle",
-                   colour = "black",
-                   type = "inline",
-                   content = "Assumption"),
 
           numericInput("pExacTxNoGA",
                        "Probability of Exacerbations with Tx - No Genetic Abnormality",
@@ -240,19 +258,7 @@ ui <- fluidPage(
                    colour = "black",
                    type = "inline",
                    content = "Assumption"),
-          numericInput ("pExacNoTxGA",
-                        "Probability of Exacerbation without Tx - Genetic Abnormality",
-                        min = 0,
-                        max = 1,
-                        value = 0.55,
-                        step = 0.01) %>%
-            helper(icon = "question-circle",
-                   colour = "black",
-                   type = "inline",
-                   content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
-adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
-23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
-therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
+
           numericInput ("pExacTxGA",
                         "Probability of Exacerbation with Tx - Genetic Abnormality",
                         min = 0,
@@ -334,7 +340,7 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
                               step = 1))
           ),
 
-        p(strong("Utilities - Exacerbation requiring ER visit  (Beta Distribution)")),
+        p(strong("Utilities - Exacerbation requiring ER visit (Beta Distribution)")),
         fluidRow(
           column(4,
                  numericInput("uExacERAlpha",
