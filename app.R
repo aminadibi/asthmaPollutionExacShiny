@@ -332,41 +332,41 @@ testing? Pharmacogenomics J 2017; 17: 1–3."))
                    type = "inline",
                    content = "Campbell JD, Spackman DE, Sullivan SD. The costs and consequences of omalizumab in uncontrolled asthma
 from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
-          p(strong("Utilities - Exacerbation without hospitalization (Beta Distribution)")),
-          fluidRow(
-          column(4,
-                   numericInput("uExacModAlpha",
-                       "Alpha",
-                       min = 0,
-                       max = 100,
-                       value = 0.51,
-                       step = 1)),
-          column(4,
-                 numericInput("uExacModBeta",
-                              "Beta",
-                              min = 0,
-                              max = 100,
-                              value = 0.38,
-                              step = 1))
-          ),
-
-        p(strong("Utilities - Exacerbation requiring ER visit (Beta Distribution)")),
-        fluidRow(
-          column(4,
-                 numericInput("uExacERAlpha",
-                              "Alpha",
-                              min = 0,
-                              max = 100,
-                              value = 0.36,
-                              step = 1)),
-          column(4,
-                 numericInput("uExacERBeta",
-                              "Beta",
-                              min = 0,
-                              max = 100,
-                              value = 0.45,
-                              step = 1))
-        ),
+        #   p(strong("Utilities - Exacerbation without hospitalization (Beta Distribution)")),
+        #   fluidRow(
+        #   column(4,
+        #            numericInput("uExacModAlpha",
+        #                "Alpha",
+        #                min = 0,
+        #                max = 100,
+        #                value = 0.51,
+        #                step = 1)),
+        #   column(4,
+        #          numericInput("uExacModBeta",
+        #                       "Beta",
+        #                       min = 0,
+        #                       max = 100,
+        #                       value = 0.38,
+        #                       step = 1))
+        #   ),
+        #
+        # p(strong("Utilities - Exacerbation requiring ER visit (Beta Distribution)")),
+        # fluidRow(
+        #   column(4,
+        #          numericInput("uExacERAlpha",
+        #                       "Alpha",
+        #                       min = 0,
+        #                       max = 100,
+        #                       value = 0.36,
+        #                       step = 1)),
+        #   column(4,
+        #          numericInput("uExacERBeta",
+        #                       "Beta",
+        #                       min = 0,
+        #                       max = 100,
+        #                       value = 0.45,
+        #                       step = 1))
+        # ),
 
         # p(strong("Utilities - Exacerbation requiring ER visit (Beta Distribution)")),
         # fluidRow(
@@ -433,10 +433,10 @@ server <- function(input, output) {
                   cExacER           = input$cExacER,
                   cExacNoHosp       = input$cExacNoHosp,
                   cGeneTest         = input$cGeneTest,
-                  uExacModAlpha     = input$uExacModAlpha,
-                  uExacModBeta      = input$uExacModBeta ,
-                  uExacERAlpha      = input$uExacERAlpha ,
-                  uExacERBeta       = input$uExacERBeta,
+                  # uExacModAlpha     = input$uExacModAlpha,
+                  # uExacModBeta      = input$uExacModBeta ,
+                  # uExacERAlpha      = input$uExacERAlpha ,
+                  # uExacERBeta       = input$uExacERBeta,
                   wtp               = input$wtp
        ))
     }, digits = 5)
@@ -455,10 +455,10 @@ server <- function(input, output) {
                              cExacER           = input$cExacER,
                              cExacNoHosp       = input$cExacNoHosp,
                              cGeneTest         = input$cGeneTest,
-                             uExacModAlpha     = input$uExacModAlpha,
-                             uExacModBeta      = input$uExacModBeta ,
-                             uExacERAlpha      = input$uExacERAlpha ,
-                             uExacERBeta       = input$uExacERBeta,
+                             # uExacModAlpha     = input$uExacModAlpha,
+                             # uExacModBeta      = input$uExacModBeta ,
+                             # uExacERAlpha      = input$uExacERAlpha ,
+                             # uExacERBeta       = input$uExacERBeta,
                              wtp               = input$wtp
                              ),
               wtp=input$wtp), "%")
@@ -477,10 +477,10 @@ server <- function(input, output) {
                                cExacER           = input$cExacER,
                                cExacNoHosp       = input$cExacNoHosp,
                                cGeneTest         = input$cGeneTest,
-                               uExacModAlpha     = input$uExacModAlpha,
-                               uExacModBeta      = input$uExacModBeta ,
-                               uExacERAlpha      = input$uExacERAlpha ,
-                               uExacERBeta       = input$uExacERBeta,
+                               # uExacModAlpha     = input$uExacModAlpha,
+                               # uExacModBeta      = input$uExacModBeta ,
+                               # uExacERAlpha      = input$uExacERAlpha ,
+                               # uExacERBeta       = input$uExacERBeta,
                                wtp               = input$wtp
       ))
       ggplotly(p)
