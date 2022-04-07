@@ -247,33 +247,49 @@ adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
           )),
 
-p(strong("Probability of Exacerbations with Treatment")),
+p(strong("Treatment Effect Risk Ratios")),
 fluidRow(
   column(4,
-         numericInput("pExacTxNoGA",
+         numericInput("TxEffectNoGA",
                       "No Genetic Abnormality",
                       min = 0,
                       max = 1,
-                      value = 0,
+                      value = 0.091,
                       step = 0.01) %>%
            helper(icon = "question-circle",
                   colour = "black",
                   type = "inline",
-                  content = "Assumption.")),
+                  content = "")),
   column(4,
-         numericInput("pExacTxGA",
+         numericInput("TxEffectGA",
                       "Genetic Abnormality",
                       min = 0,
                       max = 1,
-                      value = 0.05,
+                      value = 0.091,
                       step = 0.01) %>%
            helper(icon = "question-circle",
                   colour = "black",
                   type = "inline",
-                  content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
-adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
-23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
-therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
+                  content = c(""))
+  )),
+
+
+p(strong("Probability of Exacerbations with Treatment")),
+fluidRow(
+  column(4,
+         p("No Genetic Abnormality"),
+         textOutput("pExacTxNoGA") %>%
+           helper(icon = "question-circle",
+                  colour = "black",
+                  type = "inline",
+                  content = "Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above.")),
+  column(4,
+         p("Genetic Abnormality"),
+         textOutput("pExacTxGA") %>%
+           helper(icon = "question-circle",
+                  colour = "black",
+                  type = "inline",
+                  content = c("Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above."))
   )),
 
           numericInput ("c_tx",
@@ -424,13 +440,21 @@ server <- function(input, output) {
 
   observe_helpers(help_dir = "helpfiles")
 
+  output$pExacTxNoGA <- renderText({
+     as.character(input$pExacNoTxNoGA*input$TxEffectNoGA)
+    })
+
+    output$pExacTxGA <- renderText({
+      as.character(input$pExacNoTxGA*input$TxEffectGA)
+    })
+
     output$ICER <- renderTable({
       sequentialICER(
        asthmaICER(pGA               = input$pGA,
                   pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                  pExacTxNoGA       = input$pExacTxNoGA,
+                  pExacTxNoGA       = input$pExacNoTxNoGA*input$TxEffectNoGA,
                   pExacNoTxGA       = input$pExacNoTxGA,
-                  pExacTxGA         = input$pExacTxGA,
+                  pExacTxGA         = input$pExacNoTxGA*input$TxEffectGA,
                   c_tx              = input$c_tx,
                   cExacER           = input$cExacER,
                   cExacNoHosp       = input$cExacNoHosp,
@@ -449,19 +473,19 @@ server <- function(input, output) {
       input$wtp,
       " the probability of the targeted intervention being cost-effective is ",
       100*wtpProb(res=asthmaICER(pGA               = input$pGA,
-                             pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                             pExacTxNoGA       = input$pExacTxNoGA,
-                             pExacNoTxGA       = input$pExacNoTxGA,
-                             pExacTxGA         = input$pExacTxGA,
-                             c_tx              = input$c_tx,
-                             cExacER           = input$cExacER,
-                             cExacNoHosp       = input$cExacNoHosp,
-                             cGeneTest         = input$cGeneTest,
-                             # uExacModAlpha     = input$uExacModAlpha,
-                             # uExacModBeta      = input$uExacModBeta ,
-                             # uExacERAlpha      = input$uExacERAlpha ,
-                             # uExacERBeta       = input$uExacERBeta,
-                             wtp               = input$wtp
+                                 pExacNoTxNoGA     = input$pExacNoTxNoGA,
+                                 pExacTxNoGA       = input$pExacNoTxNoGA*input$TxEffectNoGA,
+                                 pExacNoTxGA       = input$pExacNoTxGA,
+                                 pExacTxGA         = input$pExacNoTxGA*input$TxEffectGA,
+                                 c_tx              = input$c_tx,
+                                 cExacER           = input$cExacER,
+                                 cExacNoHosp       = input$cExacNoHosp,
+                                 cGeneTest         = input$cGeneTest,
+                                 # uExacModAlpha     = input$uExacModAlpha,
+                                 # uExacModBeta      = input$uExacModBeta ,
+                                 # uExacERAlpha      = input$uExacERAlpha ,
+                                 # uExacERBeta       = input$uExacERBeta,
+                                 wtp               = input$wtp
                              ),
               wtp=input$wtp), "%")
 
@@ -471,19 +495,19 @@ server <- function(input, output) {
 
 
       p <- wtpPlot(res = asthmaICER(pGA               = input$pGA,
-                               pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                               pExacTxNoGA       = input$pExacTxNoGA,
-                               pExacNoTxGA       = input$pExacNoTxGA,
-                               pExacTxGA         = input$pExacTxGA,
-                               c_tx              = input$c_tx,
-                               cExacER           = input$cExacER,
-                               cExacNoHosp       = input$cExacNoHosp,
-                               cGeneTest         = input$cGeneTest,
-                               # uExacModAlpha     = input$uExacModAlpha,
-                               # uExacModBeta      = input$uExacModBeta ,
-                               # uExacERAlpha      = input$uExacERAlpha ,
-                               # uExacERBeta       = input$uExacERBeta,
-                               wtp               = input$wtp
+                                    pExacNoTxNoGA     = input$pExacNoTxNoGA,
+                                    pExacTxNoGA       = input$pExacNoTxNoGA*input$TxEffectNoGA,
+                                    pExacNoTxGA       = input$pExacNoTxGA,
+                                    pExacTxGA         = input$pExacNoTxGA*input$TxEffectGA,
+                                    c_tx              = input$c_tx,
+                                    cExacER           = input$cExacER,
+                                    cExacNoHosp       = input$cExacNoHosp,
+                                    cGeneTest         = input$cGeneTest,
+                                    # uExacModAlpha     = input$uExacModAlpha,
+                                    # uExacModBeta      = input$uExacModBeta ,
+                                    # uExacERAlpha      = input$uExacERAlpha ,
+                                    # uExacERBeta       = input$uExacERBeta,
+                                    wtp               = input$wtp
       ))
       ggplotly(p)
     })
