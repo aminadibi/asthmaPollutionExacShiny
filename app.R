@@ -255,22 +255,14 @@ fluidRow(
                       min = 0,
                       max = 1,
                       value = 0.091,
-                      step = 0.01) %>%
-           helper(icon = "question-circle",
-                  colour = "black",
-                  type = "inline",
-                  content = "")),
+                      step = 0.01)),
   column(4,
          numericInput("TxEffectGA",
                       "Genetic Abnormality",
                       min = 0,
                       max = 1,
                       value = 0.091,
-                      step = 0.01) %>%
-           helper(icon = "question-circle",
-                  colour = "black",
-                  type = "inline",
-                  content = c(""))
+                      step = 0.01)
   )),
 
 
