@@ -5,9 +5,9 @@ account: shefa
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5828403
-bundleId: 5768372
+bundleId: 5776147
 url: https://shefa.shinyapps.io/asthmaPrecision/
-when: 1649201530.87662
-lastSyncTime: 1649201530.87662
+when: 1649372352.02572
+lastSyncTime: 1649372352.02572
 asMultiple: FALSE
 asStatic: FALSE
