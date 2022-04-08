@@ -15,7 +15,6 @@ library(dplyr)
 library(ggplot2)
 library(purrr)
 library(ftplottools)
-library(plotly)
 
 
 asthmaICER <- function (pGA=0.25,
@@ -413,7 +412,7 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
                                div(id = "background", includeMarkdown("./background.rmd")),
                                tableOutput("ICER"),
                                textOutput("wtpProb"),
-                               plotlyOutput("acceptability")
+                               plotOutput("acceptability")
                       ),
                       tabPanel("Terms",  includeMarkdown("./disclaimer.Rmd")),
                       tabPanel("About",  includeMarkdown("./about.Rmd"))#,
@@ -482,7 +481,7 @@ server <- function(input, output) {
 
     })
 
-    output$acceptability <- renderPlotly({
+    output$acceptability <- renderPlot({
 
 
       p <- wtpPlot(res = asthmaICER(pGA               = input$pGA,
@@ -500,7 +499,7 @@ server <- function(input, output) {
                                     # uExacERBeta       = input$uExacERBeta,
                                     wtp               = input$wtp
       ))
-      ggplotly(p)
+      p
     })
 }
 
