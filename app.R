@@ -241,7 +241,7 @@ null or GSTP1 Ile105.")), class="not_bold"),
                             colour = "black",
                             type = "inline",
                             content = c("Genetic abnormality is defined as either GSTT1 null, GSTM1
-null or GSTP1 Ile105. Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+null or GSTP1 Ile105. Reference: Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
 adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
 23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
@@ -284,7 +284,7 @@ fluidRow(
   )),
 
           numericInput ("c_tx",
-                        "Cost of Treatment (2018 CAD)",
+                        "Cost of Preventive Treatment (2018 CAD)",
                         min = 0,
                         max = 1000,
                         value = 149.4,
@@ -293,7 +293,7 @@ fluidRow(
             helper(icon = "question-circle",
                    colour = "black",
                    type = "inline",
-                   content = "Minelli C, Granell R, Newson R, et al. Glutathione-S-transferase genes and asthma phenotypes: a Human Genome
+                   content = "Advair 500/50 twice per day, per month. Reference: Minelli C, Granell R, Newson R, et al. Glutathione-S-transferase genes and asthma phenotypes: a Human Genome
 Epidemiology (HuGE) systematic review and meta-analysis including unpublished data. Int J Epidemiol 2010; 39:
 539–562."),
 
@@ -310,7 +310,7 @@ fluidRow(
            helper(icon = "question-circle",
                   colour = "black",
                   type = "inline",
-                  content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
+                  content = "Reference: Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
 testing? Pharmacogenomics J 2017; 17: 1–3.")),
   column(6,
          numericInput("cExacNoHosp",
@@ -322,7 +322,7 @@ testing? Pharmacogenomics J 2017; 17: 1–3.")),
            helper(icon = "question-circle",
                   colour = "black",
                   type = "inline",
-                  content = c("Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
+                  content = c("Reference: Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
 testing? Pharmacogenomics J 2017; 17: 1–3."))
   )),
 
@@ -337,7 +337,7 @@ testing? Pharmacogenomics J 2017; 17: 1–3."))
             helper(icon = "question-circle",
                    colour = "black",
                    type = "inline",
-                   content = "Campbell JD, Spackman DE, Sullivan SD. The costs and consequences of omalizumab in uncontrolled asthma
+                   content = "Reference: Campbell JD, Spackman DE, Sullivan SD. The costs and consequences of omalizumab in uncontrolled asthma
 from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
         #   p(strong("Utilities - Exacerbation without hospitalization (Beta Distribution)")),
         #   fluidRow(
