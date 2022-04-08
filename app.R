@@ -144,7 +144,7 @@ sequentialICER <- function(res) {
             round(q.all-q.OnlyGAs, 5))
 
 
-  C  <- round(c(C.notreatment, C.OnlyGAs, C.all),2)
+  C  <- c(round(C.notreatment,2), round(C.OnlyGAs,2), round(C.all,2))
   names(LE) <- names(C) <- c("notreatment", "OnlyGAs", "q.all")
 
   seqC <- c("Ref.",
@@ -156,16 +156,14 @@ sequentialICER <- function(res) {
                round((C.all-C.OnlyGAs)/(-q.all+q.OnlyGAs),0))
 
   icer <- tibble (Strategy=c("No Intervention", "Prevention only for GA", "Prevention for all"),
-                  Costs = C,
+                  `Costs (CAD)`= C,
                   `QALY Loss` = LE,
-                  `Sequential incremental costs` = seqC,
+                  `Sequential incremental costs (CAD)` = seqC,
                   `Sequential incremental QALY loss` = seqLE,
-                  `Sequential ICER` = seqICER
+                  `Sequential ICER (CAD/QALY)` = seqICER
   )
 
   return(icer)
-
-
 
 }
 
@@ -218,10 +216,10 @@ ui <- fluidPage(
           #              max = 1,
           #              value = 0.25,
           #              step = 0.01),
-          p(strong("Probability of Exacerbations without Treatment")),
+          p(strong("Risk of additional exacerbations in asthmatics without preventive intervention (%)")),
           fluidRow(
-            column(4,
-                   numericInput("pExacNoTxNoGA",
+            column(6,
+                   sliderInput("pExacNoTxNoGA",
                                 "No Genetic Abnormality",
                                 min = 0,
                                 max = 1,
@@ -230,9 +228,10 @@ ui <- fluidPage(
                      helper(icon = "question-circle",
                             colour = "black",
                             type = "inline",
-                            content = "Assumption")),
-            column(4,
-                   numericInput("pExacNoTxGA",
+                            content = "Genetic abnormality is defined as either GSTT1 null, GSTM1
+null or GSTP1 Ile105.")),
+            column(6,
+                   sliderInput("pExacNoTxGA",
                                 "Genetic Abnormality",
                                 min = 0,
                                 max = 1,
@@ -241,7 +240,8 @@ ui <- fluidPage(
                      helper(icon = "question-circle",
                             colour = "black",
                             type = "inline",
-                            content = c("Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+                            content = c("Genetic abnormality is defined as either GSTT1 null, GSTM1
+null or GSTP1 Ile105. Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
 adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
 23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
@@ -249,15 +249,15 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
 
 p(strong("Treatment Effect Risk Ratios")),
 fluidRow(
-  column(4,
-         numericInput("TxEffectNoGA",
+  column(6,
+         sliderInput("TxEffectNoGA",
                       "No Genetic Abnormality",
                       min = 0,
                       max = 1,
                       value = 0.091,
                       step = 0.01)),
-  column(4,
-         numericInput("TxEffectGA",
+  column(6,
+         sliderInput("TxEffectGA",
                       "Genetic Abnormality",
                       min = 0,
                       max = 1,
@@ -266,16 +266,16 @@ fluidRow(
   )),
 
 
-p(strong("Probability of Exacerbations with Treatment")),
+p(strong("Risk of additional exacerbations in asthmatics with preventive intervention (%)")),
 fluidRow(
-  column(4,
+  column(6,
          p("No Genetic Abnormality"),
          textOutput("pExacTxNoGA") %>%
            helper(icon = "question-circle",
                   colour = "black",
                   type = "inline",
                   content = "Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above.")),
-  column(4,
+  column(6,
          p("Genetic Abnormality"),
          textOutput("pExacTxGA") %>%
            helper(icon = "question-circle",
@@ -285,7 +285,7 @@ fluidRow(
   )),
 
           numericInput ("c_tx",
-                        "Cost of Treatment",
+                        "Cost of Treatment (2018 CAD)",
                         min = 0,
                         max = 1000,
                         value = 149.4,
@@ -299,11 +299,11 @@ Epidemiology (HuGE) systematic review and meta-analysis including unpublished da
 539–562."),
 
 
-p(strong("Cost of Exacerbations")),
+p(strong("Cost of Exacerbations (2018 CAD)")),
 fluidRow(
-  column(4,
+  column(6,
          numericInput("cExacER",
-                      "requiring ER Visit",
+                      "Requiring ER Visit",
                       min = 0,
                       max = 1000,
                       value = 575,
@@ -313,7 +313,7 @@ fluidRow(
                   type = "inline",
                   content = "Bielinski SJ, St. Sauver JL, Olson JE, et al. Are patients willing to incur out of pocket costs for pharmacogenomic
 testing? Pharmacogenomics J 2017; 17: 1–3.")),
-  column(4,
+  column(6,
          numericInput("cExacNoHosp",
                       "No Hospitalization",
                       min = 0,
@@ -330,7 +330,7 @@ testing? Pharmacogenomics J 2017; 17: 1–3."))
 
 
           numericInput ("cGeneTest",
-                        "Cost for Genetic Test",
+                        "Cost for Genetic Test (2018 CAD)",
                         min = 0,
                         max = 1000,
                         value = 109.44,
@@ -396,7 +396,7 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
 
 
           numericInput("wtp",
-                       "Willingness to Pay",
+                       "Willingness to Pay (2018 CAD)",
                        min = 0,
                        max = 500000,
                        value = 50000,
@@ -457,7 +457,7 @@ server <- function(input, output) {
                   # uExacERBeta       = input$uExacERBeta,
                   wtp               = input$wtp
        ))
-    }, digits = 5)
+    })
 
     output$wtpProb <- renderText({
 
