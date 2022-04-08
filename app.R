@@ -264,23 +264,19 @@ fluidRow(
                       step = 0.01)), class="not_bold")),
 
 
-p(strong("Risk of additional exacerbations in asthmatics with preventive intervention (%)")),
+p(strong("Risk of additional exacerbations in asthmatics with preventive intervention (%)")) %>%
+  helper(icon = "question-circle",
+         colour = "black",
+         type = "inline",
+         content = c("Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above.")),
 fluidRow(
   column(6,
          p("No Genetic Abnormality"),
-         textOutput("pExacTxNoGA") %>%
-           helper(icon = "question-circle",
-                  colour = "black",
-                  type = "inline",
-                  content = "Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above.")),
+         textOutput("pExacTxNoGA")),
   column(6,
          p("Genetic Abnormality"),
-         textOutput("pExacTxGA") %>%
-           helper(icon = "question-circle",
-                  colour = "black",
-                  type = "inline",
-                  content = c("Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above."))
-  )),
+         textOutput("pExacTxGA")
+  )), p(),
 
           numericInput ("c_tx",
                         "Cost of Preventive Treatment (2018 CAD)",
