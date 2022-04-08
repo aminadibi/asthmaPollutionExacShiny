@@ -137,7 +137,8 @@ sequentialICER <- function(res) {
   C.all         <- res2$All_cost
 
 
-  LE <- round(c(q.notreatment,q.OnlyGAs, q.all), 5)
+  LE <- as.character(round(c(q.notreatment,q.OnlyGAs, q.all), 5))
+
   seqLE <-c("Ref.",
             round(q.OnlyGAs-q.notreatment, 5),
             round(q.all-q.OnlyGAs, 5))
