@@ -218,8 +218,8 @@ ui <- fluidPage(
           #              step = 0.01),
           p(strong("Risk of additional exacerbations in asthmatics without preventive intervention (%)")),
           fluidRow(
-            column(6,
-                   sliderInput("pExacNoTxNoGA",
+            column(6,tags$head(tags$style(HTML(".not_bold label {font-weight:normal;}"))),
+                   div(sliderInput("pExacNoTxNoGA",
                                 "No Genetic Abnormality",
                                 min = 0,
                                 max = 1,
@@ -229,9 +229,9 @@ ui <- fluidPage(
                             colour = "black",
                             type = "inline",
                             content = "Genetic abnormality is defined as either GSTT1 null, GSTM1
-null or GSTP1 Ile105.")),
+null or GSTP1 Ile105.")), class="not_bold"),
             column(6,
-                   sliderInput("pExacNoTxGA",
+                   div(sliderInput("pExacNoTxGA",
                                 "Genetic Abnormality",
                                 min = 0,
                                 max = 1,
@@ -245,25 +245,24 @@ null or GSTP1 Ile105. Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoo
 adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
 23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
-          )),
+          )), class="not_bold"),
 
 p(strong("Treatment Effect Risk Ratios")),
 fluidRow(
   column(6,
-         sliderInput("TxEffectNoGA",
+         div(sliderInput("TxEffectNoGA",
                       "No Genetic Abnormality",
                       min = 0,
                       max = 1,
                       value = 0.091,
-                      step = 0.01)),
+                      step = 0.01)), class="not_bold"),
   column(6,
-         sliderInput("TxEffectGA",
+         div(sliderInput("TxEffectGA",
                       "Genetic Abnormality",
                       min = 0,
                       max = 1,
                       value = 0.091,
-                      step = 0.01)
-  )),
+                      step = 0.01)), class="not_bold")),
 
 
 p(strong("Risk of additional exacerbations in asthmatics with preventive intervention (%)")),
