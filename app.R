@@ -247,7 +247,7 @@ adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
           )), class="not_bold"),
 
-p(strong("Treatment Effect Risk Ratios")),
+p(strong("Preventive Intervention Risk Ratios")),
 fluidRow(
   column(6,
          div(sliderInput("TxEffectNoGA",
