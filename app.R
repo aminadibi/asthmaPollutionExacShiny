@@ -26,10 +26,10 @@ asthmaICER <- function (pGA=0.25,
                         cExacER=575,
                         cExacNoHosp=126,
                         cGeneTest=199*(3796/7212)*(125.9/120.5),
-                        uExacModAlpha=0.51,
-                        uExacModBeta=0.38,
+                        uExacMedAlpha=0.51,
+                        uExacMedBeta=0.38,
                         uExacERAlpha=0.36,
-                        uExacERBeta=0.45,
+                        uExacERBeta=0.25,
                         # uExacHospAlpha=0.15,
                         # uExacHospBeta=0.30,
                         wtp=50000
@@ -43,15 +43,15 @@ asthmaICER <- function (pGA=0.25,
   Strategies <- c("No treatment", "OnlyGAs", "all")
 
   BetaPar <- function(mu, s) {
-    alpha <- ((1 - mu) / (s^2) - 1 / mu) * mu ^ 2
-    beta <- alpha * (1 / mu - 1)
+    alpha <- ((1 - mu) / (s^2) - 1/mu) * mu^2
+    beta <- alpha * (1/mu - 1)
     return(params = list(alpha = alpha, beta = beta))
   }
 
-  gammaPar <- function(m, s ) {
-    a <- (m^2 ) / ( s ^2 )
-    b <- m/ ( s ^2 )
-    list ( a=a , b=b )
+  gammaPar <- function(m, s) {
+    a <- (m^2)/(s^2)
+    b <- m/(s^2)
+    list (a=a,b=b)
   }
 
 
@@ -81,9 +81,11 @@ asthmaICER <- function (pGA=0.25,
     ##############
 
 
-    uExacModerate <-rbeta(1,uExacModAlpha, uExacModBeta)
+    uExacMed <-rbeta(1,uExacMedAlpha, uExacMedBeta)
+
     uExacER  <-rbeta(1,uExacERAlpha, uExacERBeta)
-    qLossExac  <- (1-(uExacModerate*0.6+uExacER*0.4))*15/365
+
+    qLossExac  <- (1-(uExacMed*0.6+uExacER*0.4))*15/365
     qLossNoExac  <- 0*15/365
 
     ############
@@ -330,14 +332,14 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
         #   p(strong("Utilities - Exacerbation without hospitalization (Beta Distribution)")),
         #   fluidRow(
         #   column(4,
-        #            numericInput("uExacModAlpha",
+        #            numericInput("uExacMedAlpha",
         #                "Alpha",
         #                min = 0,
         #                max = 100,
         #                value = 0.51,
         #                step = 1)),
         #   column(4,
-        #          numericInput("uExacModBeta",
+        #          numericInput("uExacMedBeta",
         #                       "Beta",
         #                       min = 0,
         #                       max = 100,
@@ -392,7 +394,7 @@ from a USA payer perspective. Allergy 2010; 65: 1141–1148"),
 
 
 
-#uExacModAlpha
+#uExacMedAlpha
         # Show a plot of the generated distribution
         mainPanel(
           tabsetPanel(type="tabs",
@@ -438,8 +440,8 @@ server <- function(input, output) {
                   cExacER           = input$cExacER,
                   cExacNoHosp       = input$cExacNoHosp,
                   cGeneTest         = input$cGeneTest,
-                  # uExacModAlpha     = input$uExacModAlpha,
-                  # uExacModBeta      = input$uExacModBeta ,
+                  # uExacMedAlpha     = input$uExacMedAlpha,
+                  # uExacMedBeta      = input$uExacMedBeta ,
                   # uExacERAlpha      = input$uExacERAlpha ,
                   # uExacERBeta       = input$uExacERBeta,
                   wtp               = input$wtp
@@ -460,8 +462,8 @@ server <- function(input, output) {
                                  cExacER           = input$cExacER,
                                  cExacNoHosp       = input$cExacNoHosp,
                                  cGeneTest         = input$cGeneTest,
-                                 # uExacModAlpha     = input$uExacModAlpha,
-                                 # uExacModBeta      = input$uExacModBeta ,
+                                 # uExacMedAlpha     = input$uExacMedAlpha,
+                                 # uExacMedBeta      = input$uExacMedBeta ,
                                  # uExacERAlpha      = input$uExacERAlpha ,
                                  # uExacERBeta       = input$uExacERBeta,
                                  wtp               = input$wtp
@@ -482,8 +484,8 @@ server <- function(input, output) {
                                     cExacER           = input$cExacER,
                                     cExacNoHosp       = input$cExacNoHosp,
                                     cGeneTest         = input$cGeneTest,
-                                    # uExacModAlpha     = input$uExacModAlpha,
-                                    # uExacModBeta      = input$uExacModBeta ,
+                                    # uExacMedAlpha     = input$uExacMedAlpha,
+                                    # uExacMedBeta      = input$uExacMedBeta ,
                                     # uExacERAlpha      = input$uExacERAlpha ,
                                     # uExacERBeta       = input$uExacERBeta,
                                     wtp               = input$wtp
