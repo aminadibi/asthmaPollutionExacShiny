@@ -249,14 +249,12 @@ adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174
 therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
           )), class="not_bold"),
 
-fluidRow(
-  column(6,
-         div(sliderInput("TxEffect",
+         sliderInput("TxEffect",
                       "Preventive Intervention Risk Ratio",
                       min = 0,
                       max = 1,
                       value = 0.05/0.55,
-                      step = 0.01)))),
+                      step = 0.01),
 
 
 p(strong("Risk of additional exacerbations in asthmatics with preventive intervention (%)")) %>%
