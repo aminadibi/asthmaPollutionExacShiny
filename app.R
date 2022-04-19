@@ -193,7 +193,7 @@ wtpPlot <- function(res, wtpInput) {
         ylab("Probability of Being Cost-Effective") +
         xlab("Willingness-to-Pay Threhold") +
         geom_vline(xintercept = wtpInput,  colour="grey", linetype="dashed") +
-        geom_text(aes(x=wtpInput, label="\n Willingness to pay", y=20), angle=90, text=element_text(size=11)) +
+        geom_text(aes(x=wtpInput, label="\n Willingness to pay", y=20), check_overlap = TRUE, angle=90) +
         scale_colour_brewer(palette = "Dark2") +
         ft_theme() +
         ggtitle("Cost-Effectiveness Acceptability Curve") +
