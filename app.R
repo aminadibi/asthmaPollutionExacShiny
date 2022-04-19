@@ -183,7 +183,7 @@ wtpProb <- function(wtp, res) {
 }
 
 
-wtpPlot <- function(res) {
+wtpPlot <- function(res, wtpInput) {
 
   df <- tibble(wtp = seq(10000, 200000, by=5000), wtp_met=NA) %>%
      mutate (wtp_met=100*map_dbl(wtp, wtpProb, res=res))
@@ -192,6 +192,8 @@ wtpPlot <- function(res) {
         geom_line(size=1.2, color="coral2") +
         ylab("Probability of Being Cost-Effective") +
         xlab("Willingness-to-Pay Threhold") +
+        geom_vline(xintercept = wtpInput,  colour="grey", linetype="dashed") +
+        geom_text(aes(x=wtpInput, label="\n Willingness to pay", y=20), angle=90, text=element_text(size=11)) +
         scale_colour_brewer(palette = "Dark2") +
         ft_theme() +
         ggtitle("Cost-Effectiveness Acceptability Curve") +
@@ -487,7 +489,8 @@ server <- function(input, output) {
                                     # uExacERAlpha      = input$uExacERAlpha ,
                                     # uExacERBeta       = input$uExacERBeta,
                                     wtp               = input$wtp
-      ))
+      ),
+      wtpInput=input$wtp)
       p
     })
 }
