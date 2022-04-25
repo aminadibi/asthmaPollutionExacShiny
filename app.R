@@ -276,7 +276,7 @@ p(strong("Risk of additional exacerbations in asthmatics with preventive interve
   helper(icon = "question-circle",
          colour = "black",
          type = "inline",
-         content = c("Probabality of exacerbation without treatment multiplied by treatment risk ratio provided above.")),
+         content = c("Probabality of exacerbation without treatment divided by treatment risk ratio provided above.")),
 fluidRow(
   column(6,
          p("No Genetic Abnormality"),
