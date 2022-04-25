@@ -257,11 +257,19 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
           )), class="not_bold"),
 
          sliderInput("TxEffect",
-                      "Preventive Intervention Risk Ratio",
-                      min = 0.01,
-                      max = 1,
-                      value = 0.05/0.55,
-                      step = 0.01),
+                      "Preventive intervention will cut the risk by a factor of:",
+                      min = 1,
+                      max = 100,
+                      value = 0.55/0.05,
+                      step = 1,
+                      ticks=F) %>%
+  helper(icon = "question-circle",
+         colour = "black",
+         type = "inline",
+         content = c("Reference: Orellano P, Quaranta N, Reynoso J, et al. Effect of outdoor air pollution on asthma exacerbations in children and
+adults: systematic review and multilevel meta-analysis. PLoS One 2017; 12: e0174050.
+23", "Zafari Z, Sadatsafavi M, Marra CA, et al. Cost-effectiveness of bronchial thermoplasty, omalizumab, and standard
+therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003.")),
 
 
 p(strong("Risk of additional exacerbations in asthmatics with preventive intervention (%)")) %>%
@@ -427,20 +435,20 @@ server <- function(input, output) {
   observe_helpers(help_dir = "helpfiles")
 
   output$pExacTxNoGA <- renderText({
-     as.character(input$pExacNoTxNoGA*input$TxEffect)
+     as.character(input$pExacNoTxNoGA/input$TxEffect)
     })
 
     output$pExacTxGA <- renderText({
-      as.character(input$pExacNoTxGA*input$TxEffect)
+      as.character(input$pExacNoTxGA/input$TxEffect)
     })
 
     output$ICER <- renderTable({
       sequentialICER(
        asthmaICER(pGA               = input$pGA,
                   pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                  pExacTxNoGA       = input$pExacNoTxNoGA*input$TxEffect,
+                  pExacTxNoGA       = input$pExacNoTxNoGA/input$TxEffect,
                   pExacNoTxGA       = input$pExacNoTxGA,
-                  pExacTxGA         = input$pExacNoTxGA*input$TxEffect,
+                  pExacTxGA         = input$pExacNoTxGA/input$TxEffect,
                   c_tx              = input$c_tx,
                   cExacER           = input$cExacER,
                   cExacNoHosp       = input$cExacNoHosp,
@@ -460,9 +468,9 @@ server <- function(input, output) {
       " the probability of the targeted intervention being cost-effective is ",
       100*wtpProb(res=asthmaICER(pGA               = input$pGA,
                                  pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                                 pExacTxNoGA       = input$pExacNoTxNoGA*input$TxEffect,
+                                 pExacTxNoGA       = input$pExacNoTxNoGA/input$TxEffect,
                                  pExacNoTxGA       = input$pExacNoTxGA,
-                                 pExacTxGA         = input$pExacNoTxGA*input$TxEffect,
+                                 pExacTxGA         = input$pExacNoTxGA/input$TxEffect,
                                  c_tx              = input$c_tx,
                                  cExacER           = input$cExacER,
                                  cExacNoHosp       = input$cExacNoHosp,
@@ -482,9 +490,9 @@ server <- function(input, output) {
 
       p <- wtpPlot(res = asthmaICER(pGA               = input$pGA,
                                     pExacNoTxNoGA     = input$pExacNoTxNoGA,
-                                    pExacTxNoGA       = input$pExacNoTxNoGA*input$TxEffect,
+                                    pExacTxNoGA       = input$pExacNoTxNoGA/input$TxEffect,
                                     pExacNoTxGA       = input$pExacNoTxGA,
-                                    pExacTxGA         = input$pExacNoTxGA*input$TxEffect,
+                                    pExacTxGA         = input$pExacNoTxGA/input$TxEffect,
                                     c_tx              = input$c_tx,
                                     cExacER           = input$cExacER,
                                     cExacNoHosp       = input$cExacNoHosp,
