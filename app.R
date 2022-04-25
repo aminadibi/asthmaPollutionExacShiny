@@ -109,13 +109,13 @@ asthmaICER <- function (pGA=0.25,
 
     #################### ## ########################################
 
-    C.notreatment<-c.1*p.exa.Notr.GA*0.25+c.2 *(1-p.exa.Notr.GA)*0.25+c.3*pExacNoTxNoGA*0.75+c.4*(1-pExacNoTxNoGA)*0.75
-    C.OnlyGAs<-c.5*p.exa.withtr.GA*0.25 +c.6*(1-p.exa.withtr.GA)*0.25+c.7*pExacNoTxNoGA*0.75 +c.8*(1-pExacNoTxNoGA)*0.75
-    C.all<-c.9*p.exa.withtr.GA*0.25+c.10*(1-p.exa.withtr.GA)*0.25+c.11*pExacTxNoGA*0.75+c.12*(1-pExacTxNoGA)*0.75
+    C.notreatment<-c.1*p.exa.Notr.GA*pGA+c.2 *(1-p.exa.Notr.GA)*pGA+c.3*pExacNoTxNoGA*(1-pGA)+c.4*(1-pExacNoTxNoGA)*(1-pGA)
+    C.OnlyGAs<-c.5*p.exa.withtr.GA*pGA +c.6*(1-p.exa.withtr.GA)*pGA+c.7*pExacNoTxNoGA*(1-pGA) +c.8*(1-pExacNoTxNoGA)*(1-pGA)
+    C.all<-c.9*p.exa.withtr.GA*pGA+c.10*(1-p.exa.withtr.GA)*pGA+c.11*pExacTxNoGA*(1-pGA)+c.12*(1-pExacTxNoGA)*(1-pGA)
 
-    q.notreatment<-qLossExac*p.exa.Notr.GA*0.25+qLossNoExac *(1-p.exa.Notr.GA)*0.25+qLossExac*pExacNoTxNoGA*0.75+qLossNoExac*(1-pExacNoTxNoGA)*0.75
-    q.OnlyGAs<-qLossExac*p.exa.withtr.GA*0.25 +qLossNoExac*(1-p.exa.withtr.GA)*0.25+qLossExac*pExacNoTxNoGA*0.75 +qLossNoExac *(1-pExacNoTxNoGA)*0.75
-    q.all<-qLossExac*p.exa.withtr.GA*0.25+qLossNoExac*(1-p.exa.withtr.GA)*0.25+qLossExac*pExacTxNoGA*0.75+qLossNoExac*(1-pExacTxNoGA)*0.75
+    q.notreatment<-qLossExac*p.exa.Notr.GA*pGA+qLossNoExac *(1-p.exa.Notr.GA)*pGA+qLossExac*pExacNoTxNoGA*(1-pGA)+qLossNoExac*(1-pExacNoTxNoGA)*(1-pGA)
+    q.OnlyGAs<-qLossExac*p.exa.withtr.GA*pGA +qLossNoExac*(1-p.exa.withtr.GA)*pGA+qLossExac*pExacNoTxNoGA*(1-pGA) +qLossNoExac *(1-pExacNoTxNoGA)*(1-pGA)
+    q.all<-qLossExac*p.exa.withtr.GA*pGA+qLossNoExac*(1-p.exa.withtr.GA)*pGA+qLossExac*pExacTxNoGA*(1-pGA)+qLossNoExac*(1-pExacTxNoGA)*(1-pGA)
 
     res[k,]=c(k,C.notreatment,C.OnlyGAs,C.all,q.notreatment,q.OnlyGAs,q.all)
   }
@@ -214,12 +214,12 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-          # numericInput("pGA",
-          #              "Probability of Genetic Abnormality",
-          #              min = 0,
-          #              max = 1,
-          #              value = 0.25,
-          #              step = 0.01),
+           numericInput("pGA",
+                        "Probability of Genetic Abnormality",
+                        min = 0,
+                        max = 1,
+                        value = 0.25,
+                        step = 0.01),
           p(strong("Risk of additional exacerbations in asthmatics without preventive intervention (%)")),
           fluidRow(
             column(6,tags$head(tags$style(HTML(".not_bold label {font-weight:normal;}"))),
