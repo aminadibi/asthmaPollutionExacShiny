@@ -215,11 +215,16 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
            numericInput("pGA",
-                        "Probability of Genetic Abnormality",
+                        "Prevalence of Genetic Abnormality (%)",
                         min = 0,
                         max = 1,
                         value = 0.25,
-                        step = 0.01),
+                        step = 0.01) %>%
+             helper(icon = "question-circle",
+                    colour = "black",
+                    type = "inline",
+                    content = "Genetic abnormality is defined as either GSTT1 null, GSTM1
+null or GSTP1 Ile105."),
           p(strong("Risk of additional exacerbations in asthmatics without preventive intervention (%)")),
           fluidRow(
             column(6,tags$head(tags$style(HTML(".not_bold label {font-weight:normal;}"))),
