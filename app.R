@@ -242,7 +242,7 @@ null or GSTP1 Ile105.")), class="not_bold"),
             column(6,
                    div(sliderInput("pExacNoTxGA",
                                 "Genetic Abnormality",
-                                min = 0,
+                                min = 0.01,
                                 max = 1,
                                 value = 0.55,
                                 step = 0.01) %>%
@@ -258,7 +258,7 @@ therapy for moderate-to-severe allergic asthma. PLoS One 2016; 11: e0146003."))
 
          sliderInput("TxEffect",
                       "Preventive Intervention Risk Ratio",
-                      min = 0,
+                      min = 0.01,
                       max = 1,
                       value = 0.05/0.55,
                       step = 0.01),
