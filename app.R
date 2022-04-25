@@ -214,7 +214,7 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-           numericInput("pGA",
+           sliderInput("pGA",
                         "Prevalence of Genetic Abnormality (%)",
                         min = 0,
                         max = 1,
@@ -229,7 +229,7 @@ null or GSTP1 Ile105."),
           fluidRow(
             column(6,tags$head(tags$style(HTML(".not_bold label {font-weight:normal;}"))),
                    div(sliderInput("pExacNoTxNoGA",
-                                "No Genetic Abnormality",
+                                "No Abnormality",
                                 min = 0,
                                 max = 1,
                                 value = 0,
